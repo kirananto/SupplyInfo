@@ -53,6 +53,7 @@ export const PoweredBy = styled.div`
   line-height: 54px;
   font-weight: 600;
   margin-right: 1rem;
+  text-align: center;
   margin-left: 1rem;
   align-self: flex-end;
   margin-bottom: 3rem;

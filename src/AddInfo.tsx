@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
 
 const Heading = styled.div`
-  font-size: 24px;
+  font-size: 16px;
   background-color: rgba(19, 18, 23, 0.975);
   border-bottom: 1px #232129 solid;
   line-height: 54px;
@@ -14,11 +14,58 @@ const Heading = styled.div`
   padding-left: 1rem;
   color: #bdbbc4;
 `;
+
+const BlueButton = styled.button`
+    height: 42px;
+    padding: 0rem 2rem;
+    border-radius: 2px;
+    cursor: pointer;
+    margin: 15px;
+    /* text-transform: uppercase; */
+    overflow: hidden;
+    border-width: 0;
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    color: #fff;
+    font-size: 18px;
+    @media (max-width: 768px) {
+        font-size: 14px;
+    }
+    @media (max-width: 520px) {
+        font-size: 12px;
+        padding: 0rem 1rem;
+        height: 2.5rem;
+    }
+    /* font-weight: 600; */
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    text-rendering: geometricprecision;
+    letter-spacing: normal;
+    transition: all 0.05s linear;
+    :hover {
+        box-shadow: 0 6px 10px rgba(50, 50, 93, 0.11),
+            0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    :focus {
+        box-shadow: 0 6px 10px rgba(50, 50, 93, 0.3),
+            0 1px 3px rgba(0, 0, 0, 0.08);
+        outline: none;
+    }
+    background: linear-gradient(45deg, #725cbd, #9b6ad4);
+    width: 322px;
+    max-width: 70% !important;
+`
+
 const SubHeading = styled(Heading)`
   display: flex;
   font-size: 16px;
   line-height: 32px;
   flex-wrap: wrap;
+  border-bottom: none;
+
+  max-width: 70%;
 `;
 const Chips = styled.div`
   border: 1px solid #b17acc;
@@ -60,26 +107,41 @@ const PlaceHeading = styled(Heading)`
   text-align: center;
 `;
 
-const ItemsContainer = styled.div`
-  /* display: flex; */
-  color: #bdbbc4;
-  padding-top: 1rem;
-  margin-left: 15px;
-  margin-right: 15px;
-`;
-
-const Item = styled.div`
-  background-color: #232129;
-  /* width: 100%; */
-  margin-bottom: 15px;
-  min-height: 100px;
-  padding: 15px;
-  text-align: left;
-`;
 const ItemTitle = styled.div`
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 4px;
+`;
+
+const StyledInput = styled.input`
+  width: 280px;
+  max-width: 70%;
+  margin-bottom: 12px;
+  height: 45px;
+  margin-top: 4px;
+  margin-left: 15px;
+  padding-left: 1rem;
+  padding-right: 1.5rem;
+  font-size: 16px;
+  color: #bdbbc4;
+  border-radius: 5px;
+  border: ${(props: any) =>
+    props.hasError
+      ? "solid 2px rgba(255, 42, 45, 0.93)"
+      : "solid 1px rgba(107, 124, 147, 0.43)"};
+  background-color: #232129;
+`;
+
+const StyledInputContainer = styled.div`
+  margin-top: 27px;
+  text-align: left;
+`;
+
+const Label = styled.div`
+  font-size: 14px;
+  text-align: left;
+  margin-left: 15px;
+  color: #bdbbc4;
 `;
 
 const Tags = styled(ItemTitle)`
@@ -113,7 +175,7 @@ const Action = styled.div`
 export default class AddInfo extends Component {
   render() {
     return (
-      <div>
+      <div style={{ textAlign: 'left'}}>
         <Heading>
           <ChipSpan
             to="/"
@@ -135,18 +197,21 @@ export default class AddInfo extends Component {
           </span>{" "}
           You're at Irinjalakuda, Kerala
         </PlaceHeading>
-        <div
-          style={{
-            color: "white",
-            textAlign: "left",
-            paddingLeft: "1rem",
-            fontStyle: "italic",
-            marginTop: "0.5rem"
-          }}
-        >
-          Available items
-        </div>
-        <SubHeading>
+        <StyledInputContainer>
+          <Label>Enter place name</Label>
+          <StyledInput />
+        </StyledInputContainer>
+        <StyledInputContainer>
+          <Label>Address</Label>
+          <StyledInput />
+        </StyledInputContainer>
+        <StyledInputContainer>
+          <Label>Pin Location</Label>
+          <StyledInput disabled={true} placeholder={'Autofilled from your gps location'} />
+        </StyledInputContainer>
+        <StyledInputContainer>
+          <Label>Select supply</Label>
+          <SubHeading>
           <Chips>
             <span role="img" aria-label="sanitizer">
               🧼
@@ -166,53 +231,13 @@ export default class AddInfo extends Component {
             Food items
           </Chips>
         </SubHeading>
-        <ItemsContainer>
-          {Array(5)
-            .fill(1)
-            .map(item => (
-              <Item>
-                <Distance>
-                  <span role="img" aria-label="location">
-                    📍
-                  </span>
-                  0.5 KM
-                </Distance>
-                <ItemTitle>Neethi Medicals</ItemTitle>
-                <ItemDescription>
-                  Taluk Head Quarters Hospital, Hospital Rd, Thrippunithura,
-                  Ernakulam
-                </ItemDescription>
-                <Tags>Tags</Tags>
-                <TagItem>
-                  <span role="img" aria-label="recently-added">
-                    ✨
-                  </span>{" "}
-                  Recently added
-                </TagItem>
-                <TagItem>
-                  <span role="img" aria-label="masks">
-                    😷
-                  </span>{" "}
-                  Mask
-                </TagItem>
-
-                <Actions>
-                  <Action>
-                    <span role="img" aria-label="call">
-                      📞
-                    </span>{" "}
-                    Call
-                  </Action>
-                  <Action>
-                    <span role="img" aria-label="navigate">
-                      🚗
-                    </span>{" "}
-                    Navigate
-                  </Action>
-                </Actions>
-              </Item>
-            ))}
-        </ItemsContainer>
+        </StyledInputContainer>
+        <StyledInputContainer>
+          <Label>Contact number</Label>
+          <StyledInput />
+        </StyledInputContainer>
+        <BlueButton>Save</BlueButton>
+       
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
         </PoweredBy>
