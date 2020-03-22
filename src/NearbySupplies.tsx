@@ -105,12 +105,20 @@ const Actions = styled.div`
   border-top: 1px #2d2d2d solid;
   grid-template-columns: repeat(2, 1fr);
 `;
-const Action = styled.div`
+const Action = styled.a`
   text-align: center;
+  text-decoration: none;
+  color: #bdbbc4;
   padding: 0.5rem;
 `;
 
 export default class Homepage extends Component {
+
+  state = {
+    lat: 0,
+    long: 0,
+    tel: '+917012918926'
+  }
   render() {
     return (
       <div>
@@ -197,13 +205,13 @@ export default class Homepage extends Component {
                 </TagItem>
 
                 <Actions>
-                  <Action>
+                  <Action href={`tel:${this.state.tel}`}>
                     <span role="img" aria-label="call">
                       📞
                     </span>{" "}
                     Call
                   </Action>
-                  <Action>
+                  <Action href={`google.navigation:q=${this.state.lat},${this.state.long}`}>
                     <span role="img" aria-label="navigate">
                       🚗
                     </span>{" "}
