@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import Logo from './logo.png'
 const ButtonContainer = styled.div`
   align-self: center;
   justify-self: center;
@@ -45,7 +45,7 @@ const Heading = styled.div`
   font-weight: 600;
   margin-right: 1rem;
   margin-left: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   color: #bdbbc4;
 `;
 export const PoweredBy = styled.div`
@@ -85,10 +85,13 @@ const ItalicsText = styled.div`
 `;
 
 const IText = styled.div`
-
-margin-bottom: 2rem;
+  margin-bottom: 2rem;
   color: #bdbbc4;
   font-size: 60px;
+`;
+
+const ImageContainer = styled.img`
+    max-width: 50%;
 `
 
 export default class Homepage extends Component {
@@ -96,8 +99,9 @@ export default class Homepage extends Component {
     return (
       <div style={{ display: "grid", minHeight: "100vh" }}>
         <ButtonContainer>
+            <ImageContainer src={Logo}/>
           <Heading>
-            Nearest Supply
+            Neigbhourhood Supply
             <SubHeading>
               An inititative to ease life during <br />
               COVID-19 Lockdowns
@@ -106,12 +110,20 @@ export default class Homepage extends Component {
           <IText>I do,</IText>
           <Button to={"/add-data"}>
             Have supply
-            <ItalicsText>Of food/sanitizers/masks that can help people</ItalicsText>
+            <ItalicsText>
+              Of food/sanitizers/masks that can help people
+            </ItalicsText>
           </Button>
-          <Button to={"/add-data"}>Know someone
-          <ItalicsText>with supply of sanitizers, masks and food.</ItalicsText></Button>
-          <Button to={"/nearby-places"}>Need Supply
-          <ItalicsText>of sanitizers, masks and food.</ItalicsText></Button>
+          <Button to={"/add-data"}>
+            Know someone
+            <ItalicsText>
+              with supply of sanitizers, masks and food.
+            </ItalicsText>
+          </Button>
+          <Button to={"/nearby-places"}>
+            Need Supply
+            <ItalicsText>of sanitizers, masks and food.</ItalicsText>
+          </Button>
         </ButtonContainer>
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
