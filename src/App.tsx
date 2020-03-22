@@ -4,6 +4,8 @@ import "./App.css";
 import Homepage from "./Homepage";
 import NearbySupplies from "./NearbySupplies";
 import AddInfo from "./AddInfo";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      <ToastContainer />
     </div>
   );
 }

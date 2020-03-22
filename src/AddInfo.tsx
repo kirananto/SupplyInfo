@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
+import { toast } from 'react-toastify';
+import { validatePhone } from "./helpers";
 
 const Heading = styled.div`
   font-size: 16px;
@@ -89,6 +91,14 @@ const PlaceHeading = styled(Heading)`
   text-align: center;
 `;
 
+const ItalicText = styled.div`
+  font-size: 12px;
+  font-style: italic; 
+  text-align: left;
+  color: #bdbbc4;
+  margin-left: 15px;
+`;
+
 
 const StyledInput = styled.input`
   width: 280px;
@@ -121,11 +131,13 @@ const Label = styled.div`
 `;
 
 export default class AddInfo extends Component<any, any> {
+
   readonly state = {
     place_name: "",
     address: "",
     location: "",
     lat: "",
+    direct: new URLSearchParams(window.location.search).get("direct") === 'true',
     long: "",
     contact: "",
     masks: false,
@@ -145,10 +157,20 @@ export default class AddInfo extends Component<any, any> {
     });
   };
   handleContact = (event: any) => {
-    this.setState({
-      contact: event.target.value
-    });
+    const contact = event.target.value
+    if(validatePhone(contact)) {
+
+      this.setState({
+        contact
+      });
+    }
   };
+
+  onSubmit = () => {
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_CENTER
+    });
+  }
   render() {
     return (
       <div style={{ textAlign: "left" }}>
@@ -193,9 +215,10 @@ export default class AddInfo extends Component<any, any> {
             disabled={true}
             placeholder={"Autofilled from your gps location"}
           />
+          {!this.state.direct && <ItalicText>Ability to select location of shop - coming soon 🎉</ItalicText>}
         </StyledInputContainer>
         <StyledInputContainer>
-          <Label>Select supply</Label>
+          <Label style={{ marginBottom: '0.5rem'}}>🛍️ Select supplies that are available here</Label>
           <SubHeading>
             <Chips
               clicked={this.state.sanitizer}
@@ -231,11 +254,11 @@ export default class AddInfo extends Component<any, any> {
         <StyledInputContainer>
           <Label>📞 Contact number </Label>
           <StyledInput
-            onChange={this.handleAddress}
+            onChange={this.handleContact}
             placeholder="Contact no of person with supply"
           />
         </StyledInputContainer>
-        <BlueButton>Save</BlueButton>
+        <BlueButton onClick={this.onSubmit}>Save</BlueButton>
 
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>

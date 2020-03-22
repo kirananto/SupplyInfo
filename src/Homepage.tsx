@@ -108,13 +108,13 @@ export default class Homepage extends Component {
             </SubHeading>
           </Heading>
           <IText>I do,</IText>
-          <Button to={"/add-data"}>
+          <Button to={"/add-data?direct=true"}>
             Have supply
             <ItalicsText>
               Of food/sanitizers/masks that can help people
             </ItalicsText>
           </Button>
-          <Button to={"/add-data"}>
+          <Button to={"/add-data?direct=false"}>
             Know someone
             <ItalicsText>
               with supply of sanitizers, masks and food.
