@@ -198,15 +198,15 @@ export default class AddInfo extends Component {
           You're at Irinjalakuda, Kerala
         </PlaceHeading>
         <StyledInputContainer>
-          <Label>Enter place name</Label>
+          <Label>🏥 Enter place name </Label>
           <StyledInput />
         </StyledInputContainer>
         <StyledInputContainer>
-          <Label>Address</Label>
+          <Label>📨 Address </Label>
           <StyledInput />
         </StyledInputContainer>
         <StyledInputContainer>
-          <Label>Pin Location</Label>
+          <Label>📍 Pin Location </Label>
           <StyledInput disabled={true} placeholder={'Autofilled from your gps location'} />
         </StyledInputContainer>
         <StyledInputContainer>
@@ -233,7 +233,7 @@ export default class AddInfo extends Component {
         </SubHeading>
         </StyledInputContainer>
         <StyledInputContainer>
-          <Label>Contact number</Label>
+          <Label>📞 Contact number </Label>
           <StyledInput />
         </StyledInputContainer>
         <BlueButton>Save</BlueButton>
