@@ -108,6 +108,10 @@ export default class Homepage extends Component {
             </SubHeading>
           </Heading>
           <IText>I do,</IText>
+          <Button to={"/nearby-places"}>
+            Need Supply
+            <ItalicsText>of sanitizers, masks and food.</ItalicsText>
+          </Button>
           <Button to={"/add-data?direct=true"}>
             Have supply
             <ItalicsText>
@@ -119,10 +123,6 @@ export default class Homepage extends Component {
             <ItalicsText>
               with supply of sanitizers, masks and food.
             </ItalicsText>
-          </Button>
-          <Button to={"/nearby-places"}>
-            Need Supply
-            <ItalicsText>of sanitizers, masks and food.</ItalicsText>
           </Button>
         </ButtonContainer>
         <PoweredBy>

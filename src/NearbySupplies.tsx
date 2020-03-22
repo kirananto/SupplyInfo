@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
 import axios from "axios";
+import firebase from "./Firebase";
+import { findDistanceFromLocation } from "./helpers";
 
 const Heading = styled.div`
   font-size: 24px;
@@ -41,24 +43,29 @@ const ChipSpan = styled(NavLink)`
   text-decoration: none;
 `;
 
-const TagItem = styled.span`
+const TagItem = styled.div`
   border: 1px solid #b17acc;
   color: #b17acc;
-  margin: 0.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  height: 32px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  height: 30px;
   border-radius: 1rem;
   text-decoration: none;
   margin: 0;
   width: fit-content;
   font-size: 1rem;
   margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const PlaceHeading = styled(Heading)`
   font-size: 14px;
   text-align: center;
+`;
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const ItemsContainer = styled.div`
@@ -113,19 +120,18 @@ const Action = styled.a`
   padding: 0.5rem;
 `;
 
-export default class Homepage extends Component {
+export default class NearbySupplies extends Component {
   state = {
-    lat: 0,
     userLat: 0,
     userLong: 0,
-    locationString: '',
+    locationString: "",
     latFetched: true,
-    long: 0,
+    supplies: [],
     tel: "+917012918926"
   };
 
   componentDidMount() {
-    navigator?.geolocation?.getCurrentPosition(this.setDefaultCenter);
+    navigator?.geolocation.getCurrentPosition(this.locationSuccessCallback, this.locationErrorCallback);
   }
 
   fetchLocationString = () => {
@@ -133,13 +139,28 @@ export default class Homepage extends Component {
       url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.userLat},${this.state.userLong}&addressdetails=1`
     }).then(result => {
       const address = result.data?.[0]?.address;
-      this.setState({
-        locationString: `${address?.road},${address?.village},${address?.county}`
-      });
+      this.setState(
+        {
+          locationString: `${address?.road},${address?.village},${address?.county}`
+        },
+        () => {
+          const db = firebase.firestore();
+          db.collection("Entries").onSnapshot(querySnapshot => {
+            var supplies: any[] = [];
+            console.log("supplies", querySnapshot.size);
+            querySnapshot.forEach(function(doc) {
+              console.log("doc", doc.data());
+              supplies.push(doc.data());
+            });
+            console.log("supplies", supplies);
+            this.setState({ supplies });
+          });
+        }
+      );
     });
   };
 
-  setDefaultCenter = (position: any) => {
+  locationSuccessCallback = (position: any) => {
     if (position?.coords?.latitude && position?.coords?.longitude) {
       this.setState(
         {
@@ -155,6 +176,13 @@ export default class Homepage extends Component {
       });
     }
   };
+
+  locationErrorCallback = () => {
+    console.log('hello')
+    this.setState({
+      latFetched: false
+    });
+  }
   render() {
     return (
       <div>
@@ -173,11 +201,15 @@ export default class Homepage extends Component {
           </ChipSpan>
           Nearby Supplies
         </Heading>
-        <PlaceHeading>
+        {this.state.latFetched ? (<>
+          <PlaceHeading>
           <span role="img" aria-label="location">
             📍
           </span>{" "}
-          You're at {this.state.locationString ?this.state.locationString : `Unknown location`}
+          You're at{" "}
+          {this.state.locationString
+            ? this.state.locationString
+            : `Unknown location`}
         </PlaceHeading>
         <div
           style={{
@@ -211,44 +243,66 @@ export default class Homepage extends Component {
           </Chips>
         </SubHeading>
         <ItemsContainer>
-          {Array(5)
-            .fill(1)
-            .map(item => (
-              <Item>
+          {this.state.supplies.map((item: any, index) => {
+            const distance = findDistanceFromLocation(
+              item.location.latitude,
+              item.location.longitude,
+              this.state.userLat,
+              this.state.userLong,
+              "K"
+            );
+            return (
+              <Item key={index}>
                 <Distance>
                   <span role="img" aria-label="location">
                     📍
                   </span>
-                  0.5 KM
+                  {distance} KM
                 </Distance>
-                <ItemTitle>Neethi Medicals</ItemTitle>
-                <ItemDescription>
-                  Taluk Head Quarters Hospital, Hospital Rd, Thrippunithura,
-                  Ernakulam
-                </ItemDescription>
+                <ItemTitle>{item.place_name}</ItemTitle>
+                <ItemDescription>{item.address}</ItemDescription>
                 <Tags>Tags</Tags>
-                <TagItem>
-                  <span role="img" aria-label="recently-added">
-                    ✨
-                  </span>{" "}
-                  Recently added
-                </TagItem>
-                <TagItem>
-                  <span role="img" aria-label="masks">
-                    😷
-                  </span>{" "}
-                  Mask
-                </TagItem>
-
+                <TagsContainer>
+                  <TagItem>
+                    <span role="img" aria-label="recently-added">
+                      ✨
+                    </span>{" "}
+                    Recently added
+                  </TagItem>
+                  {item.supply_masks && (
+                    <TagItem>
+                      <span role="img" aria-label="masks">
+                        😷
+                      </span>{" "}
+                      Mask
+                    </TagItem>
+                  )}
+                  {item.supply_sanitizer && (
+                    <TagItem>
+                      <span role="img" aria-label="masks">
+                        🧼
+                      </span>{" "}
+                      Sanitizers
+                    </TagItem>
+                  )}
+                  {item.supply_food && (
+                    <TagItem>
+                      <span role="img" aria-label="masks">
+                        🍕
+                      </span>{" "}
+                      Food items
+                    </TagItem>
+                  )}
+                </TagsContainer>
                 <Actions>
-                  <Action href={`tel:${this.state.tel}`}>
+                  <Action href={`tel:${item.address}`}>
                     <span role="img" aria-label="call">
                       📞
                     </span>{" "}
                     Call
                   </Action>
                   <Action
-                    href={`google.navigation:q=${this.state.lat},${this.state.long}`}
+                    href={`google.navigation:q=${item.location.latitude},${item.location.longitude}`}
                   >
                     <span role="img" aria-label="navigate">
                       🚗
@@ -257,8 +311,10 @@ export default class Homepage extends Component {
                   </Action>
                 </Actions>
               </Item>
-            ))}
+            );
+          })}
         </ItemsContainer>
+        </>) : (<StyledError> <div>📍</div>Please enable location services </StyledError>)}
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
         </PoweredBy>
@@ -266,3 +322,15 @@ export default class Homepage extends Component {
     );
   }
 }
+
+const StyledError = styled(Heading)`
+  line-height: normal;
+  text-align: center;
+  display: grid;
+  align-content: center;
+  min-height: calc(100vh - 13rem);
+  padding-bottom: 5rem;
+  div {
+    font-size: 80px;
+  }
+`
