@@ -63,8 +63,8 @@ export default class Homepage extends Component {
       <div style={{ display: "grid", minHeight: "100vh" }}>
         <ButtonContainer>
           <Heading>
-            Nearest Med Supply
-            <SubHeading>An inititative to prevent COVID-19</SubHeading>
+            Nearest Supply
+            <SubHeading>An inititative to ease life during COVID-19 Lockdowns</SubHeading>
           </Heading>
           <Button to={"/add-data"}>Add Supply info</Button>
           <Button to={"/nearby-places"}>View Nearest supplies</Button>

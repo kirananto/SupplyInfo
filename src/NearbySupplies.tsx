@@ -1,43 +1,6 @@
 import React, { Component } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-
-const ButtonContainer = styled.div`
-  align-self: center;
-  justify-self: center;
-  width: 100%;
-  max-width: 400px;
-`;
-
-const Button = styled(Link)`
-  min-height: 100px;
-  box-sizing: border-box;
-  -webkit-box-align: center;
-  align-items: center;
-  white-space: nowrap;
-  font-size: 24px;
-  display: grid;
-  -webkit-box-pack: center;
-  margin-bottom: 2rem;
-  justify-content: center;
-  border: 1px solid #b17acc;
-  color: #b17acc;
-  word-break: break-all;
-  margin-right: 3rem;
-  margin-left: 3rem;
-  cursor: pointer;
-  outline: 0px;
-  padding: 0px 1rem;
-  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  border-radius: 1rem;
-  text-decoration: none;
-  :hover {
-    background-color: #663399;
-    border: 1px solid #663399;
-    color: #bdbbc4;
-  }
-`;
 
 const Heading = styled.div`
   font-size: 24px;
@@ -54,6 +17,7 @@ const SubHeading = styled(Heading)`
   display: flex;
   font-size: 16px;
   line-height: 32px;
+  flex-wrap: wrap;
 `;
 const Chips = styled.div`
   border: 1px solid #b17acc;
@@ -164,7 +128,12 @@ export default class Homepage extends Component {
           </ChipSpan>
           Nearby Supplies
         </Heading>
-        <PlaceHeading>📍 You're at Irinjalakuda, Kerala</PlaceHeading>
+        <PlaceHeading>
+          <span role="img" aria-label="location">
+            📍
+          </span>{" "}
+          You're at Irinjalakuda, Kerala
+        </PlaceHeading>
         <div
           style={{
             color: "white",
@@ -177,25 +146,71 @@ export default class Homepage extends Component {
           Available items
         </div>
         <SubHeading>
-          <Chips>🧼 Sanitizers</Chips>
-          <Chips>😷 Masks</Chips>
+          <Chips>
+            <span role="img" aria-label="sanitizer">
+              🧼
+            </span>
+            Sanitizers
+          </Chips>
+          <Chips>
+            <span role="img" aria-label="mask">
+              😷
+            </span>
+            Masks
+          </Chips>
+          <Chips>
+            <span role="img" aria-label="food">
+              🍕
+            </span>
+            Food items
+          </Chips>
         </SubHeading>
         <ItemsContainer>
-          {Array(5).fill(1).map(item => (<Item>
-            <Distance>📍0.5 KM</Distance>
-            <ItemTitle>Neethi Medicals</ItemTitle>
-            <ItemDescription>
-              Taluk Head Quarters Hospital, Hospital Rd, Thrippunithura,
-              Ernakulam
-            </ItemDescription>
-            <Tags>Tags</Tags>
-            <TagItem>✨ Recently added</TagItem>
-            <TagItem>😷 Mask</TagItem>
-            <Actions>
-              <Action>📞 Call</Action>
-              <Action>🚗 Navigate</Action>
-            </Actions>
-          </Item>))}
+          {Array(5)
+            .fill(1)
+            .map(item => (
+              <Item>
+                <Distance>
+                  <span role="img" aria-label="location">
+                    📍
+                  </span>
+                  0.5 KM
+                </Distance>
+                <ItemTitle>Neethi Medicals</ItemTitle>
+                <ItemDescription>
+                  Taluk Head Quarters Hospital, Hospital Rd, Thrippunithura,
+                  Ernakulam
+                </ItemDescription>
+                <Tags>Tags</Tags>
+                <TagItem>
+                  <span role="img" aria-label="recently-added">
+                    ✨
+                  </span>{" "}
+                  Recently added
+                </TagItem>
+                <TagItem>
+                  <span role="img" aria-label="masks">
+                    😷
+                  </span>{" "}
+                  Mask
+                </TagItem>
+
+                <Actions>
+                  <Action>
+                    <span role="img" aria-label="call">
+                      📞
+                    </span>{" "}
+                    Call
+                  </Action>
+                  <Action>
+                    <span role="img" aria-label="navigate">
+                      🚗
+                    </span>{" "}
+                    Navigate
+                  </Action>
+                </Actions>
+              </Item>
+            ))}
         </ItemsContainer>
       </div>
     );
