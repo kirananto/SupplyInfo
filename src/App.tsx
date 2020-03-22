@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import Homepage from "./Homepage";
 import NearbySupplies from "./NearbySupplies";
+import AddInfo from "./AddInfo";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/add-data">
-            <div>Add info </div>
+            <AddInfo />
           </Route>
           <Route path="/nearby-places">
             <NearbySupplies />

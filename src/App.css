@@ -5,6 +5,11 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+html {
+
+  background-color: #131217;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

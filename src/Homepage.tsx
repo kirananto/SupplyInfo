@@ -23,8 +23,8 @@ const Button = styled(Link)`
   border: 1px solid #b17acc;
   color: #b17acc;
   word-break: break-all;
-  margin-right: 3rem;
-  margin-left: 3rem;
+  margin-right: 10%;
+  margin-left: 10%;
   cursor: pointer;
   outline: 0px;
   padding: 0px 1rem;
@@ -48,9 +48,35 @@ const Heading = styled.div`
   margin-bottom: 3rem;
   color: #bdbbc4;
 `;
+export const PoweredBy = styled.div`
+  font-size: 14px;
+  line-height: 54px;
+  font-weight: 600;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  align-self: flex-end;
+  margin-bottom: 3rem;
+  color: #bdbbc4;
+  a {
+    color: #b17acc;
+  }
+`;
 const SubHeading = styled.div`
   font-size: 16px;
+  margin-top: 1rem;
   font-weight: 400;
+  line-height: normal;
+  font-style: italic;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  color: #bdbbc4;
+`;
+
+const ItalicsText = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: -2rem;
+  line-height: normal;
   font-style: italic;
   margin-right: 1rem;
   margin-left: 1rem;
@@ -64,11 +90,21 @@ export default class Homepage extends Component {
         <ButtonContainer>
           <Heading>
             Nearest Supply
-            <SubHeading>An inititative to ease life during COVID-19 Lockdowns</SubHeading>
+            <SubHeading>
+              An inititative to ease life during <br />
+              COVID-19 Lockdowns
+            </SubHeading>
           </Heading>
-          <Button to={"/add-data"}>Add Supply info</Button>
-          <Button to={"/nearby-places"}>View Nearest supplies</Button>
+          <Button to={"/add-data"}>
+            Add Supply info
+            <ItalicsText>Help people find food and masks</ItalicsText>
+          </Button>
+          <Button to={"/nearby-places"}>View Nearest supplies
+          <ItalicsText>Nearest source for sanitizers, masks and food.</ItalicsText></Button>
         </ButtonContainer>
+        <PoweredBy>
+          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
+        </PoweredBy>
       </div>
     );
   }

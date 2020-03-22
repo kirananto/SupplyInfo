@@ -110,7 +110,7 @@ const Action = styled.div`
   padding: 0.5rem;
 `;
 
-export default class Homepage extends Component {
+export default class AddInfo extends Component {
   render() {
     return (
       <div>
@@ -127,7 +127,7 @@ export default class Homepage extends Component {
             {" "}
             {"< "}Back
           </ChipSpan>
-          Nearby Supplies
+          Add Nearby Supply Info
         </Heading>
         <PlaceHeading>
           <span role="img" aria-label="location">
@@ -213,7 +213,9 @@ export default class Homepage extends Component {
               </Item>
             ))}
         </ItemsContainer>
-        <PoweredBy>Powered by <a href="https://github.com/kirananto">Kiran Anto</a></PoweredBy>
+        <PoweredBy>
+          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
+        </PoweredBy>
       </div>
     );
   }
