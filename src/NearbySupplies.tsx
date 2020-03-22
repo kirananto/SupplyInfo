@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
+import axios from "axios";
 
 const Heading = styled.div`
   font-size: 24px;
@@ -113,12 +114,47 @@ const Action = styled.a`
 `;
 
 export default class Homepage extends Component {
-
   state = {
     lat: 0,
+    userLat: 0,
+    userLong: 0,
+    locationString: '',
+    latFetched: true,
     long: 0,
-    tel: '+917012918926'
+    tel: "+917012918926"
+  };
+
+  componentDidMount() {
+    navigator?.geolocation?.getCurrentPosition(this.setDefaultCenter);
   }
+
+  fetchLocationString = () => {
+    axios({
+      url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.userLat},${this.state.userLong}&addressdetails=1`
+    }).then(result => {
+      const address = result.data?.[0]?.address;
+      this.setState({
+        locationString: `${address?.road},${address?.village},${address?.county}`
+      });
+    });
+  };
+
+  setDefaultCenter = (position: any) => {
+    if (position?.coords?.latitude && position?.coords?.longitude) {
+      this.setState(
+        {
+          userLat: position.coords.latitude,
+          userLong: position.coords.longitude,
+          latFetched: true
+        },
+        this.fetchLocationString
+      );
+    } else {
+      this.setState({
+        latFetched: false
+      });
+    }
+  };
   render() {
     return (
       <div>
@@ -141,7 +177,7 @@ export default class Homepage extends Component {
           <span role="img" aria-label="location">
             📍
           </span>{" "}
-          You're at Irinjalakuda, Kerala
+          You're at {this.state.locationString ?this.state.locationString : `Unknown location`}
         </PlaceHeading>
         <div
           style={{
@@ -211,7 +247,9 @@ export default class Homepage extends Component {
                     </span>{" "}
                     Call
                   </Action>
-                  <Action href={`google.navigation:q=${this.state.lat},${this.state.long}`}>
+                  <Action
+                    href={`google.navigation:q=${this.state.lat},${this.state.long}`}
+                  >
                     <span role="img" aria-label="navigate">
                       🚗
                     </span>{" "}
@@ -221,7 +259,9 @@ export default class Homepage extends Component {
               </Item>
             ))}
         </ItemsContainer>
-        <PoweredBy>Powered by <a href="https://github.com/kirananto">Kiran Anto</a></PoweredBy>
+        <PoweredBy>
+          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
+        </PoweredBy>
       </div>
     );
   }

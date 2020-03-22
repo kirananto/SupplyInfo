@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
-import { toast } from 'react-toastify';
+import axios from 'axios'
+import { toast } from "react-toastify";
 import { validatePhone } from "./helpers";
 
 const Heading = styled.div`
@@ -93,12 +94,19 @@ const PlaceHeading = styled(Heading)`
 
 const ItalicText = styled.div`
   font-size: 12px;
-  font-style: italic; 
+  font-style: italic;
   text-align: left;
   color: #bdbbc4;
   margin-left: 15px;
 `;
-
+const ErrorText = styled.div`
+  font-size: 20px;
+  text-align: center;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  color: #CF6679;
+  margin-left: 15px;
+`;
 
 const StyledInput = styled.input`
   width: 280px;
@@ -131,18 +139,45 @@ const Label = styled.div`
 `;
 
 export default class AddInfo extends Component<any, any> {
-
   readonly state = {
     place_name: "",
     address: "",
-    location: "",
-    lat: "",
-    direct: new URLSearchParams(window.location.search).get("direct") === 'true',
-    long: "",
+    location: 'Unknown location',
+    locationShort: "",
+    lat: 0,
+    latFetched: false,
+    direct:
+      new URLSearchParams(window.location.search).get("direct") === "true",
+    long: 0,
     contact: "",
     masks: false,
     food: false,
     sanitizer: false
+  };
+
+  fetchLocationString = () => {
+    axios({ url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.lat},${this.state.long}&addressdetails=1`}).then(result => {
+      const address = result.data?.[0]?.address    
+    this.setState({ location: result.data?.[0]?.display_name, locationShort: `${address?.road},${address?.village},${address?.county}` })
+    })
+  }
+
+  componentDidMount() {
+    navigator?.geolocation?.getCurrentPosition(this.setDefaultCenter);
+  }
+
+  setDefaultCenter = (position: any) => {
+    if (position?.coords?.latitude && position?.coords?.longitude) {
+      this.setState({
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+        latFetched: true
+      }, this.fetchLocationString);
+    } else {
+      this.setState({
+        latFetched: false
+      });
+    }
   };
 
   handleChangePlaceName = (event: any) => {
@@ -157,9 +192,8 @@ export default class AddInfo extends Component<any, any> {
     });
   };
   handleContact = (event: any) => {
-    const contact = event.target.value
-    if(validatePhone(contact)) {
-
+    const contact = event.target.value;
+    if (validatePhone(contact)) {
       this.setState({
         contact
       });
@@ -170,7 +204,7 @@ export default class AddInfo extends Component<any, any> {
     toast.success("Success Notification !", {
       position: toast.POSITION.TOP_CENTER
     });
-  }
+  };
   render() {
     return (
       <div style={{ textAlign: "left" }}>
@@ -193,12 +227,14 @@ export default class AddInfo extends Component<any, any> {
           <span role="img" aria-label="location">
             📍
           </span>{" "}
-          You're at Irinjalakuda, Kerala
+          You're at {this.state.locationShort ? this.state.locationShort  : this.state.location}
         </PlaceHeading>
+        {this.state.latFetched ? (<>
         <StyledInputContainer>
           <Label>🏥 Enter place name </Label>
           <StyledInput
             onChange={this.handleChangePlaceName}
+            value={this.state.place_name}
             placeholder="Enter the title of the shop"
           />
         </StyledInputContainer>
@@ -206,6 +242,7 @@ export default class AddInfo extends Component<any, any> {
           <Label>📨 Address </Label>
           <StyledInput
             onChange={this.handleAddress}
+            value={this.state.address}
             placeholder="Address, so people can identify the location"
           />
         </StyledInputContainer>
@@ -213,12 +250,19 @@ export default class AddInfo extends Component<any, any> {
           <Label>📍 Pin Location </Label>
           <StyledInput
             disabled={true}
+            value={this.state.location}
             placeholder={"Autofilled from your gps location"}
           />
-          {!this.state.direct && <ItalicText>Ability to select location of shop - coming soon 🎉</ItalicText>}
+          {!this.state.direct && (
+            <ItalicText>
+              Ability to select location of shop - coming soon 🎉
+            </ItalicText>
+          )}
         </StyledInputContainer>
         <StyledInputContainer>
-          <Label style={{ marginBottom: '0.5rem'}}>🛍️ Select supplies that are available here</Label>
+          <Label style={{ marginBottom: "0.5rem" }}>
+            🛍️ Select supplies that are available here
+          </Label>
           <SubHeading>
             <Chips
               clicked={this.state.sanitizer}
@@ -255,11 +299,12 @@ export default class AddInfo extends Component<any, any> {
           <Label>📞 Contact number </Label>
           <StyledInput
             onChange={this.handleContact}
+            value={this.state.contact}
             placeholder="Contact no of person with supply"
           />
         </StyledInputContainer>
         <BlueButton onClick={this.onSubmit}>Save</BlueButton>
-
+              </>): (<ErrorText> ❌ Unable to read your location</ErrorText>)}
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
         </PoweredBy>
