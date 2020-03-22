@@ -10,7 +10,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled(Link)`
-  min-height: 100px;
+  min-height: 90px;
   box-sizing: border-box;
   -webkit-box-align: center;
   align-items: center;
@@ -18,7 +18,7 @@ const Button = styled(Link)`
   font-size: 24px;
   display: grid;
   -webkit-box-pack: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   justify-content: center;
   border: 1px solid #b17acc;
   color: #b17acc;
@@ -64,7 +64,7 @@ export const PoweredBy = styled.div`
 `;
 const SubHeading = styled.div`
   font-size: 16px;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-weight: 400;
   line-height: normal;
   font-style: italic;
@@ -84,6 +84,13 @@ const ItalicsText = styled.div`
   color: #bdbbc4;
 `;
 
+const IText = styled.div`
+
+margin-bottom: 2rem;
+  color: #bdbbc4;
+  font-size: 60px;
+`
+
 export default class Homepage extends Component {
   render() {
     return (
@@ -96,12 +103,15 @@ export default class Homepage extends Component {
               COVID-19 Lockdowns
             </SubHeading>
           </Heading>
+          <IText>I do,</IText>
           <Button to={"/add-data"}>
-            Add Supply info
-            <ItalicsText>Help people find food and masks</ItalicsText>
+            Have supply
+            <ItalicsText>Of food/sanitizers/masks that can help people</ItalicsText>
           </Button>
-          <Button to={"/nearby-places"}>View Nearest supplies
-          <ItalicsText>Nearest source for sanitizers, masks and food.</ItalicsText></Button>
+          <Button to={"/add-data"}>Know someone
+          <ItalicsText>with supply of sanitizers, masks and food.</ItalicsText></Button>
+          <Button to={"/nearby-places"}>Need Supply
+          <ItalicsText>of sanitizers, masks and food.</ItalicsText></Button>
         </ButtonContainer>
         <PoweredBy>
           Powered by <a href="https://github.com/kirananto">Kiran Anto</a>

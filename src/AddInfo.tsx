@@ -28,15 +28,7 @@ const BlueButton = styled.button`
     border-radius: 4px;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
     color: #fff;
-    font-size: 18px;
-    @media (max-width: 768px) {
-        font-size: 14px;
-    }
-    @media (max-width: 520px) {
-        font-size: 12px;
-        padding: 0rem 1rem;
-        height: 2.5rem;
-    }
+    font-size: 16px;
     /* font-weight: 600; */
     font-style: normal;
     font-stretch: normal;
@@ -53,9 +45,8 @@ const BlueButton = styled.button`
             0 1px 3px rgba(0, 0, 0, 0.08);
         outline: none;
     }
-    background: linear-gradient(45deg, #725cbd, #9b6ad4);
+    background:  #b17acc;
     width: 322px;
-    max-width: 70% !important;
 `
 
 const SubHeading = styled(Heading)`
@@ -115,7 +106,6 @@ const ItemTitle = styled.div`
 
 const StyledInput = styled.input`
   width: 280px;
-  max-width: 70%;
   margin-bottom: 12px;
   height: 45px;
   margin-top: 4px;
@@ -144,35 +134,36 @@ const Label = styled.div`
   color: #bdbbc4;
 `;
 
-const Tags = styled(ItemTitle)`
-  font-size: 15px;
-  font-style: italic;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-`;
-const ItemDescription = styled.div`
-  font-size: 14px;
-`;
-const Distance = styled.div`
-  font-size: 14px;
-  float: right;
-`;
+export default class AddInfo extends Component<any, any> {
 
-const Actions = styled.div`
-  margin-left: -15px;
-  margin-right: -15px;
-  margin-bottom: -15px;
-  margin-top: 1rem;
-  display: grid;
-  border-top: 1px #2d2d2d solid;
-  grid-template-columns: repeat(2, 1fr);
-`;
-const Action = styled.div`
-  text-align: center;
-  padding: 0.5rem;
-`;
+  readonly state = {
+    place_name: '',
+    address: '',
+    location: '',
+    lat: '',
+    long: '',
+    contact: '',
+    masks: false,
+    food: false,
+    sanitizer: false,
+  }
 
-export default class AddInfo extends Component {
+  handleChangePlaceName = (event: any) => {
+    this.setState({
+      place_name: event.target.value
+    })
+  }
+  
+  handleAddress = (event: any) => {
+    this.setState({
+      address: event.target.value
+    })
+  }
+  handleContact = (event: any) => {
+    this.setState({
+      contact: event.target.value
+    })
+  }
   render() {
     return (
       <div style={{ textAlign: 'left'}}>
@@ -199,11 +190,11 @@ export default class AddInfo extends Component {
         </PlaceHeading>
         <StyledInputContainer>
           <Label>🏥 Enter place name </Label>
-          <StyledInput />
+          <StyledInput onChange={this.handleChangePlaceName} placeholder="Enter the title of the shop"/>
         </StyledInputContainer>
         <StyledInputContainer>
           <Label>📨 Address </Label>
-          <StyledInput />
+          <StyledInput onChange={this.handleAddress}  placeholder="Address, so people can identify the location" />
         </StyledInputContainer>
         <StyledInputContainer>
           <Label>📍 Pin Location </Label>
@@ -234,7 +225,7 @@ export default class AddInfo extends Component {
         </StyledInputContainer>
         <StyledInputContainer>
           <Label>📞 Contact number </Label>
-          <StyledInput />
+          <StyledInput  onChange={this.handleAddress} placeholder="Contact no of person with supply" />
         </StyledInputContainer>
         <BlueButton>Save</BlueButton>
        
