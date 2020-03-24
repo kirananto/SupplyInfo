@@ -188,7 +188,7 @@ export default class NearbySupplies extends Component {
                 this.state.userLat,
                 this.state.userLong
               ),
-              radius: 5,
+              radius: 50,
               limit: 100
             })
             .onSnapshot((querySnapshot: any) => {
