@@ -29,6 +29,7 @@ const SubHeading = styled(Heading)`
 const ShareButton = styled.div`
   border-radius: 1rem;
   margin: auto;
+  cursor: pointer;
   padding: 1rem 2rem;
   margin-top: 2rem;
   border: 1px solid white;
@@ -274,8 +275,8 @@ export default class NearbySupplies extends Component {
     }
   };
 
-  locationErrorCallback = () => {
-    console.log("hello");
+  locationErrorCallback = (error: any) => {
+    console.log("hello", error);
     this.setState({
       latFetched: false
     });
