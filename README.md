@@ -2,7 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/ca896586-31dd-45f8-ae62-75881267c149/deploy-status)](https://app.netlify.com/sites/condescending-kare-6ab542/deploys)
 
-![Your Fri](/src/logo.png)
+
+<img src="./src/logo.png" width="200" height="200" />
 
 Help your neighbourhood get supplies in the most efficient and safe way possible. Alert your locality on available essentials in the neighbourhood by using Neighbourhood Supply. 
 
