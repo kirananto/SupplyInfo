@@ -20,8 +20,8 @@ const Button = styled(Link)`
   -webkit-box-pack: center;
   margin-bottom: 1rem;
   justify-content: center;
-  border: 1px solid #b17acc;
-  color: #b17acc;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
   word-break: break-all;
   margin-right: 10%;
   margin-left: 10%;
@@ -33,8 +33,8 @@ const Button = styled(Link)`
   border-radius: 1rem;
   text-decoration: none;
   :hover {
-    background-color: #663399;
-    border: 1px solid #663399;
+    background-color: #7d1313;
+    border: 1px solid #7d1313;
     color: #bdbbc4;
   }
 `;
@@ -58,7 +58,7 @@ export const PoweredBy = styled.div`
   margin-bottom: 3rem;
   color: #bdbbc4;
   a {
-    color: #b17acc;
+    color: #d32f2f;
   }
 `;
 const SubHeading = styled.div`

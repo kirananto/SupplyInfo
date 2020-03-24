@@ -1,13 +1,13 @@
 .App {
   text-align: center;
-  background-color: #131217;
+  background-color: #000;
   min-height: 100vh;
   font-family: 'Open Sans', sans-serif;
 }
 
 html {
 
-  background-color: #131217;
+  background-color: #000;
 }
 
 .App-logo {
@@ -22,7 +22,7 @@ html {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #000;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -33,7 +33,7 @@ html {
 }
 
 .App-link {
-  color: #b17acc;
+  color: #d32f2f;
 }
 
 @keyframes App-logo-spin {

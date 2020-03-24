@@ -10,7 +10,7 @@ import { GeoFirestore } from "geofirestore";
 
 const Heading = styled.div`
   font-size: 24px;
-  background-color: rgba(19, 18, 23, 0.975);
+  background-color: #000;
   border-bottom: 1px #232129 solid;
   line-height: 54px;
   font-weight: 600;
@@ -36,8 +36,8 @@ const ShareButton = styled.div`
   width: fit-content;
 `;
 const Chips = styled.div`
-  border: 1px solid #b17acc;
-  color: #b17acc;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
   margin: 0.5rem;
   cursor: pointer;
   padding-left: 0.5rem;
@@ -47,18 +47,18 @@ const Chips = styled.div`
   transition: all 0.5s ease-in-out;
   border-radius: 1rem;
   background: ${(props: { clicked?: boolean }) =>
-    props.clicked ? "#b17acc" : "transparent"};
+    props.clicked ? "#d32f2f" : "transparent"};
   color: ${(props: { clicked?: boolean }) =>
-    props.clicked ? "#fff" : "#b17acc"};
+    props.clicked ? "#fff" : "#d32f2f"};
 
   :hover {
-    background: #b17acc;
+    background: #d32f2f;
     color: #fff;
   }
 `;
 const ChipSpan = styled(NavLink)`
-  border: 1px solid #b17acc;
-  color: #b17acc;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
   margin: 0.5rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -68,8 +68,8 @@ const ChipSpan = styled(NavLink)`
 `;
 
 const TagItem = styled.div`
-  border: 1px solid #b17acc;
-  color: #b17acc;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
   padding-left: 1rem;
   padding-right: 1rem;
   height: 24px;
@@ -109,7 +109,7 @@ export const LoadingDiv = styled.div`
 `;
 
 const Item = styled.div`
-  background-color: #232129;
+  background-color: #161517;
   /* width: 100%; */
   margin-bottom: 15px;
   min-height: 100px;

@@ -14,7 +14,7 @@ import { GeoCollectionReference, GeoFirestore } from "geofirestore";
 
 const Heading = styled.div`
   font-size: 16px;
-  background-color: rgba(19, 18, 23, 0.975);
+  background-color: #000;
   border-bottom: 1px #232129 solid;
   line-height: 54px;
   font-weight: 600;
@@ -36,7 +36,7 @@ const BlueButton = styled.button`
   outline: none;
   border-radius: 4px;
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  color: #b17acc;
+  color: #d32f2f;
   font-size: 20px;
   font-weight: 600;
   font-style: normal;
@@ -53,7 +53,7 @@ const BlueButton = styled.button`
     outline: none;
   }
   background: transparent;
-  border: #b17acc 2px solid;
+  border: #d32f2f 2px solid;
   width: 322px;
 `;
 
@@ -67,24 +67,24 @@ const SubHeading = styled(Heading)`
   max-width: 70%;
 `;
 const Chips = styled.div`
-  border: 1px solid #b17acc;
+  border: 1px solid #d32f2f;
   cursor: pointer;
   background: ${(props: { clicked: boolean }) =>
-    props.clicked ? "#b17acc" : "transparent"};
+    props.clicked ? "#d32f2f" : "transparent"};
   color: ${(props: { clicked: boolean }) =>
-    props.clicked ? "#fff" : "#b17acc"};
+    props.clicked ? "#fff" : "#d32f2f"};
   margin: 0.5rem;
   padding: 0.5rem 1rem;
   height: 32px;
   border-radius: 2rem;
   :hover {
-    background: #b17acc;
+    background: #d32f2f;
     color: #fff;
   }
 `;
 const ChipSpan = styled(NavLink)`
-  border: 1px solid #b17acc;
-  color: #b17acc;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
   margin: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -131,7 +131,7 @@ const StyledInput = styled.input`
     props.hasError
       ? "solid 2px rgba(255, 42, 45, 0.93)"
       : "solid 1px rgba(107, 124, 147, 0.43)"};
-  background-color: #232129;
+  background-color: #161517;
 `;
 
 const StyledInputContainer = styled.div`
