@@ -169,6 +169,61 @@ export default class NearbySupplies extends Component {
     );
   };
 
+  loadSupplies = () => {
+    const db = fb.firestore();
+    const geofirestore: GeoFirestore = new GeoFirestore(db);
+    geofirestore
+      .collection("Entries")
+      .near({
+        center: new firebase.firestore.GeoPoint(
+          this.state.userLat,
+          this.state.userLong
+        ),
+        radius: 100,
+        limit: 100
+      })
+      .onSnapshot(querySnapshot => {
+        var supplies: any[] = [];
+        console.log("supplies", querySnapshot.size);
+        querySnapshot.forEach(doc => {
+          console.log("doc", doc.data());
+          supplies.push({
+            ...doc.data(),
+            distance: findDistanceFromLocation(
+              doc.data().coordinates.latitude,
+              doc.data().coordinates.longitude,
+              this.state.userLat,
+              this.state.userLong,
+              "K"
+            )
+          });
+        });
+        this.setState({
+          isLoading: false,
+          supplies: supplies
+            .filter(item => {
+              if (this.state.clicked === "sanitizer") {
+                return item.supply_sanitizer;
+              } else if (this.state.clicked === "mask") {
+                return item.supply_masks;
+              } else if (this.state.clicked === "food") {
+                return item.supply_food;
+              } else {
+                return true;
+              }
+            })
+            .filter(
+              (item: any) =>
+                item.created.toMillis() >
+                firebase.firestore.Timestamp.fromDate(
+                  new Date(fiveDaysBack)
+                ).toMillis()
+            )
+            .sort((a, b) => a.distance - b.distance)
+        });
+      });
+  };
+
   fetchLocationString = () => {
     axios({
       url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.userLat},${this.state.userLong}&addressdetails=1`
@@ -178,49 +233,7 @@ export default class NearbySupplies extends Component {
         {
           locationString: `${address?.road},${address?.village},${address?.county}`
         },
-        () => {
-          const db = fb.firestore();
-          const geofirestore: GeoFirestore = new GeoFirestore(db);
-          geofirestore
-            .collection("Entries")
-            .near({
-              center: new firebase.firestore.GeoPoint(
-                this.state.userLat,
-                this.state.userLong
-              ),
-              radius: 100,
-              limit: 100
-            })
-            .onSnapshot((querySnapshot: any) => {
-              var supplies: any[] = [];
-              console.log("supplies", querySnapshot.size);
-              querySnapshot.forEach((doc: any) => {
-                console.log("doc", doc.data());
-                supplies.push({
-                  ...doc.data(),
-                  distance: findDistanceFromLocation(
-                    doc.data().coordinates.latitude,
-                    doc.data().coordinates.longitude,
-                    this.state.userLat,
-                    this.state.userLong,
-                    "K"
-                  )
-                });
-              });
-              this.setState({
-                isLoading: false,
-                supplies: supplies
-                  .filter(
-                    (item: any) =>
-                      item.created.toMillis() >
-                      firebase.firestore.Timestamp.fromDate(
-                        new Date(fiveDaysBack)
-                      ).toMillis()
-                  )
-                  .sort((a, b) => a.distance - b.distance)
-              });
-            });
-        }
+        this.loadSupplies
       );
     });
   };
@@ -290,8 +303,10 @@ export default class NearbySupplies extends Component {
             </div>
             <SubHeading>
               <Chips
-              // clicked={this.state.clicked === "sanitizer"}
-              // onClick={() => this.setState({ clicked: "sanitizer" })}
+                clicked={this.state.clicked === "sanitizer"}
+                onClick={() =>
+                  this.setState({ clicked: "sanitizer" }, this.loadSupplies)
+                }
               >
                 <span role="img" aria-label="sanitizer">
                   🧼{" "}
@@ -299,8 +314,10 @@ export default class NearbySupplies extends Component {
                 Sanitizers
               </Chips>
               <Chips
-              // clicked={this.state.clicked === "mask"}
-              // onClick={() => this.setState({ clicked: "mask" })}
+                clicked={this.state.clicked === "mask"}
+                onClick={() =>
+                  this.setState({ clicked: "mask" }, this.loadSupplies)
+                }
               >
                 <span role="img" aria-label="mask">
                   😷{" "}
@@ -308,8 +325,10 @@ export default class NearbySupplies extends Component {
                 Masks
               </Chips>
               <Chips
-              // clicked={this.state.clicked === "food"}
-              // onClick={() => this.setState({ clicked: "food" })}
+                clicked={this.state.clicked === "food"}
+                onClick={() =>
+                  this.setState({ clicked: "food" }, this.loadSupplies)
+                }
               >
                 <span role="img" aria-label="food">
                   🍕{" "}
@@ -341,7 +360,9 @@ export default class NearbySupplies extends Component {
                       {item.description && (
                         <>
                           {" "}
-                          <ItemDescription style={{ marginTop: "1rem", fontWeight: 'bold' }}>
+                          <ItemDescription
+                            style={{ marginTop: "1rem", fontWeight: "bold" }}
+                          >
                             Additional info
                           </ItemDescription>
                           <ItemDescription style={{ fontStyle: "italic" }}>
