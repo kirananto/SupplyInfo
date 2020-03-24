@@ -125,7 +125,7 @@ export default class Homepage extends Component {
           </Button>
         </ButtonContainer>
         <PoweredBy>
-          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <NavLink to="https://github.com/kirananto/SupplyInfo">Github</NavLink> | #BreaktheChain
+          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <a href="https://github.com/kirananto/SupplyInfo">Github</a> | #BreaktheChain
         </PoweredBy>
       </div>
     );
