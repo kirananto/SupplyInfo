@@ -52,7 +52,6 @@ export const PoweredBy = styled.div`
   font-size: 14px;
   line-height: 54px;
   font-weight: 600;
-  margin-right: 1rem;
   text-align: center;
   margin-left: 1rem;
   align-self: flex-end;
@@ -126,7 +125,7 @@ export default class Homepage extends Component {
           </Button>
         </ButtonContainer>
         <PoweredBy>
-          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
+          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>, in association with #BreaktheChain
         </PoweredBy>
       </div>
     );

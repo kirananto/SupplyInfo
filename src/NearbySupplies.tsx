@@ -3,8 +3,10 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { PoweredBy } from "./Homepage";
 import axios from "axios";
-import firebase from "./Firebase";
+import fb from "./Firebase";
+import firebase from "firebase";
 import { findDistanceFromLocation } from "./helpers";
+import { GeoFirestore } from "geofirestore";
 
 const Heading = styled.div`
   font-size: 24px;
@@ -27,10 +29,22 @@ const Chips = styled.div`
   border: 1px solid #b17acc;
   color: #b17acc;
   margin: 0.5rem;
+  cursor: pointer;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   height: 32px;
+
+  transition: all 0.5s ease-in-out;
   border-radius: 1rem;
+  background: ${(props: { clicked?: boolean }) =>
+    props.clicked ? "#b17acc" : "transparent"};
+  color: ${(props: { clicked?: boolean }) =>
+    props.clicked ? "#fff" : "#b17acc"};
+
+  :hover {
+    background: #b17acc;
+    color: #fff;
+  }
 `;
 const ChipSpan = styled(NavLink)`
   border: 1px solid #b17acc;
@@ -48,7 +62,7 @@ const TagItem = styled.div`
   color: #b17acc;
   padding-left: 1rem;
   padding-right: 1rem;
-  height: 30px;
+  height: 24px;
   border-radius: 1rem;
   text-decoration: none;
   margin: 0;
@@ -74,6 +88,14 @@ const ItemsContainer = styled.div`
   padding-top: 1rem;
   margin-left: 15px;
   margin-right: 15px;
+`;
+
+const LoadingDiv = styled.div`
+  color: #bdbbc4;
+  font-size: 16px;
+  margin-top: calc(50vh - 150px);
+  margin-bottom: calc(50vh - 150px);
+  text-align: center;
 `;
 
 const Item = styled.div`
@@ -120,6 +142,10 @@ const Action = styled.a`
   padding: 0.5rem;
 `;
 
+const prevDate = new Date().getTime() - 1000 * 60 * 60 * 24 * 1;
+
+const fiveDaysBack = new Date().getTime() - 1000 * 60 * 60 * 24 * 5;
+
 export default class NearbySupplies extends Component {
   state = {
     userLat: 0,
@@ -127,12 +153,21 @@ export default class NearbySupplies extends Component {
     locationString: "",
     latFetched: true,
     supplies: [],
+    isLoading: true,
+    clicked: "",
     tel: "+917012918926"
   };
 
   componentDidMount() {
-    navigator?.geolocation.getCurrentPosition(this.locationSuccessCallback, this.locationErrorCallback);
+    this.initialize();
   }
+
+  initialize = () => {
+    navigator?.geolocation.getCurrentPosition(
+      this.locationSuccessCallback,
+      this.locationErrorCallback
+    );
+  };
 
   fetchLocationString = () => {
     axios({
@@ -144,17 +179,47 @@ export default class NearbySupplies extends Component {
           locationString: `${address?.road},${address?.village},${address?.county}`
         },
         () => {
-          const db = firebase.firestore();
-          db.collection("Entries").onSnapshot(querySnapshot => {
-            var supplies: any[] = [];
-            console.log("supplies", querySnapshot.size);
-            querySnapshot.forEach(function(doc) {
-              console.log("doc", doc.data());
-              supplies.push(doc.data());
+          const db = fb.firestore();
+          const geofirestore: GeoFirestore = new GeoFirestore(db);
+          geofirestore
+            .collection("Entries")
+            .near({
+              center: new firebase.firestore.GeoPoint(
+                this.state.userLat,
+                this.state.userLong
+              ),
+              radius: 5,
+              limit: 100
+            })
+            .onSnapshot((querySnapshot: any) => {
+              var supplies: any[] = [];
+              console.log("supplies", querySnapshot.size);
+              querySnapshot.forEach((doc: any) => {
+                console.log("doc", doc.data());
+                supplies.push({
+                  ...doc.data(),
+                  distance: findDistanceFromLocation(
+                    doc.data().coordinates.latitude,
+                    doc.data().coordinates.longitude,
+                    this.state.userLat,
+                    this.state.userLong,
+                    "K"
+                  )
+                });
+              });
+              this.setState({
+                isLoading: false,
+                supplies: supplies
+                  .filter(
+                    (item: any) =>
+                      item.created.toMillis() >
+                      firebase.firestore.Timestamp.fromDate(
+                        new Date(fiveDaysBack)
+                      ).toMillis()
+                  )
+                  .sort((a, b) => a.distance - b.distance)
+              });
             });
-            console.log("supplies", supplies);
-            this.setState({ supplies });
-          });
         }
       );
     });
@@ -178,11 +243,11 @@ export default class NearbySupplies extends Component {
   };
 
   locationErrorCallback = () => {
-    console.log('hello')
+    console.log("hello");
     this.setState({
       latFetched: false
     });
-  }
+  };
   render() {
     return (
       <div>
@@ -201,122 +266,149 @@ export default class NearbySupplies extends Component {
           </ChipSpan>
           Nearby Supplies
         </Heading>
-        {this.state.latFetched ? (<>
-          <PlaceHeading>
-          <span role="img" aria-label="location">
-            📍
-          </span>{" "}
-          You're at{" "}
-          {this.state.locationString
-            ? this.state.locationString
-            : `Unknown location`}
-        </PlaceHeading>
-        <div
-          style={{
-            color: "white",
-            textAlign: "left",
-            paddingLeft: "1rem",
-            fontStyle: "italic",
-            marginTop: "0.5rem"
-          }}
-        >
-          Available items
-        </div>
-        <SubHeading>
-          <Chips>
-            <span role="img" aria-label="sanitizer">
-              🧼
-            </span>
-            Sanitizers
-          </Chips>
-          <Chips>
-            <span role="img" aria-label="mask">
-              😷
-            </span>
-            Masks
-          </Chips>
-          <Chips>
-            <span role="img" aria-label="food">
-              🍕
-            </span>
-            Food items
-          </Chips>
-        </SubHeading>
-        <ItemsContainer>
-          {this.state.supplies.map((item: any, index) => {
-            const distance = findDistanceFromLocation(
-              item.location.latitude,
-              item.location.longitude,
-              this.state.userLat,
-              this.state.userLong,
-              "K"
-            );
-            return (
-              <Item key={index}>
-                <Distance>
-                  <span role="img" aria-label="location">
-                    📍
-                  </span>
-                  {distance} KM
-                </Distance>
-                <ItemTitle>{item.place_name}</ItemTitle>
-                <ItemDescription>{item.address}</ItemDescription>
-                <Tags>Tags</Tags>
-                <TagsContainer>
-                  <TagItem>
-                    <span role="img" aria-label="recently-added">
-                      ✨
-                    </span>{" "}
-                    Recently added
-                  </TagItem>
-                  {item.supply_masks && (
-                    <TagItem>
-                      <span role="img" aria-label="masks">
-                        😷
-                      </span>{" "}
-                      Mask
-                    </TagItem>
-                  )}
-                  {item.supply_sanitizer && (
-                    <TagItem>
-                      <span role="img" aria-label="masks">
-                        🧼
-                      </span>{" "}
-                      Sanitizers
-                    </TagItem>
-                  )}
-                  {item.supply_food && (
-                    <TagItem>
-                      <span role="img" aria-label="masks">
-                        🍕
-                      </span>{" "}
-                      Food items
-                    </TagItem>
-                  )}
-                </TagsContainer>
-                <Actions>
-                  <Action href={`tel:${item.address}`}>
-                    <span role="img" aria-label="call">
-                      📞
-                    </span>{" "}
-                    Call
-                  </Action>
-                  <Action
-                    href={`google.navigation:q=${item.location.latitude},${item.location.longitude}`}
-                  >
-                    <span role="img" aria-label="navigate">
-                      🚗
-                    </span>{" "}
-                    Navigate
-                  </Action>
-                </Actions>
-              </Item>
-            );
-          })}
-        </ItemsContainer>
-        </>) : (<StyledError> <div>📍</div>Please enable location services </StyledError>)}
+        {this.state.latFetched ? (
+          <>
+            <PlaceHeading>
+              <span role="img" aria-label="location">
+                📍
+              </span>{" "}
+              You're at{" "}
+              {this.state.locationString
+                ? this.state.locationString
+                : `Unknown location`}
+            </PlaceHeading>
+            <div
+              style={{
+                color: "white",
+                textAlign: "left",
+                paddingLeft: "1rem",
+                fontStyle: "italic",
+                marginTop: "0.5rem"
+              }}
+            >
+              Available items
+            </div>
+            <SubHeading>
+              <Chips
+              // clicked={this.state.clicked === "sanitizer"}
+              // onClick={() => this.setState({ clicked: "sanitizer" })}
+              >
+                <span role="img" aria-label="sanitizer">
+                  🧼{" "}
+                </span>
+                Sanitizers
+              </Chips>
+              <Chips
+              // clicked={this.state.clicked === "mask"}
+              // onClick={() => this.setState({ clicked: "mask" })}
+              >
+                <span role="img" aria-label="mask">
+                  😷{" "}
+                </span>
+                Masks
+              </Chips>
+              <Chips
+              // clicked={this.state.clicked === "food"}
+              // onClick={() => this.setState({ clicked: "food" })}
+              >
+                <span role="img" aria-label="food">
+                  🍕{" "}
+                </span>
+                Food items
+              </Chips>
+            </SubHeading>
+            {this.state.isLoading || this.state.supplies?.length === 0 ? (
+              <LoadingDiv>
+                Be aware, not afraid ! <br />
+                {this.state.isLoading ? "loading..." : "Sorry no results found"}
+              </LoadingDiv>
+            ) : (
+              <ItemsContainer>
+                {this.state.supplies.map((item: any, index) => {
+                  return (
+                    <Item key={index}>
+                      <Distance>
+                        <span role="img" aria-label="location">
+                          📍
+                        </span>
+                        {item.distance} KM
+                      </Distance>
+                      <ItemTitle>{item.place_name}</ItemTitle>
+                      <ItemDescription>{item.address}</ItemDescription>
+                      <Tags>Tags</Tags>
+                      <TagsContainer>
+                        {item.created && item.created.toMillis() > prevDate && (
+                          <TagItem>
+                            <span role="img" aria-label="recently-added">
+                              ✨
+                            </span>{" "}
+                            Recently added
+                          </TagItem>
+                        )}
+                        {item.supply_masks && (
+                          <TagItem>
+                            <span role="img" aria-label="masks">
+                              😷
+                            </span>{" "}
+                            Mask
+                          </TagItem>
+                        )}
+                        {item.supply_sanitizer && (
+                          <TagItem>
+                            <span role="img" aria-label="masks">
+                              🧼
+                            </span>{" "}
+                            Sanitizers
+                          </TagItem>
+                        )}
+                        {item.supply_food && (
+                          <TagItem>
+                            <span role="img" aria-label="masks">
+                              🍕
+                            </span>{" "}
+                            Food items
+                          </TagItem>
+                        )}
+                        {item.facility_delivery && (
+                          <TagItem>
+                            <span role="img" aria-label="masks">
+                              🚚
+                            </span>{" "}
+                            Door delivery
+                          </TagItem>
+                        )}
+                      </TagsContainer>
+                      <Actions>
+                        <Action href={`tel:${item.contact}`}>
+                          <span role="img" aria-label="call">
+                            📞
+                          </span>{" "}
+                          Call
+                        </Action>
+                        <Action
+                          href={`google.navigation:q=${item.coordinates.latitude},${item.coordinates.longitude}`}
+                        >
+                          <span role="img" aria-label="navigate">
+                            🚗
+                          </span>{" "}
+                          Navigate
+                        </Action>
+                      </Actions>
+                    </Item>
+                  );
+                })}
+              </ItemsContainer>
+            )}
+          </>
+        ) : (
+          <StyledError onClick={ this.initialize}>
+            {" "}
+            <div>📍</div>Please enable location services{" "} <br/> <span >Click here after that</span>
+          </StyledError>
+        )}
         <PoweredBy>
-          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>
+          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>, in
+          association with #BreaktheChain
         </PoweredBy>
       </div>
     );
@@ -333,4 +425,4 @@ const StyledError = styled(Heading)`
   div {
     font-size: 80px;
   }
-`
+`;
