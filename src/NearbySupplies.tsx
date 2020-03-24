@@ -93,7 +93,7 @@ const ItemsContainer = styled.div`
 const LoadingDiv = styled.div`
   color: #bdbbc4;
   font-size: 16px;
-  margin-top: calc(50vh - 150px);
+  margin-top: calc(50vh - 250px);
   margin-bottom: calc(50vh - 150px);
   text-align: center;
 `;
@@ -188,7 +188,7 @@ export default class NearbySupplies extends Component {
                 this.state.userLat,
                 this.state.userLong
               ),
-              radius: 50,
+              radius: 100,
               limit: 100
             })
             .onSnapshot((querySnapshot: any) => {
@@ -319,6 +319,9 @@ export default class NearbySupplies extends Component {
             </SubHeading>
             {this.state.isLoading || this.state.supplies?.length === 0 ? (
               <LoadingDiv>
+                <div style={{ fontSize: "60px" }}>
+                  {this.state.isLoading ? "🔄" : "❌"}
+                </div>
                 Be aware, not afraid ! <br />
                 {this.state.isLoading ? "loading..." : "Sorry no results found"}
               </LoadingDiv>
@@ -331,10 +334,21 @@ export default class NearbySupplies extends Component {
                         <span role="img" aria-label="location">
                           📍
                         </span>
-                        {item.distance} KM
+                        {item.distance.toFixed(2)} KM
                       </Distance>
                       <ItemTitle>{item.place_name}</ItemTitle>
                       <ItemDescription>{item.address}</ItemDescription>
+                      {item.description && (
+                        <>
+                          {" "}
+                          <ItemDescription style={{ marginTop: "1rem", fontWeight: 'bold' }}>
+                            Additional info
+                          </ItemDescription>
+                          <ItemDescription style={{ fontStyle: "italic" }}>
+                            {item.description}
+                          </ItemDescription>
+                        </>
+                      )}
                       <Tags>Tags</Tags>
                       <TagsContainer>
                         {item.created && item.created.toMillis() > prevDate && (
@@ -401,9 +415,10 @@ export default class NearbySupplies extends Component {
             )}
           </>
         ) : (
-          <StyledError onClick={ this.initialize}>
+          <StyledError onClick={this.initialize}>
             {" "}
-            <div>📍</div>Please enable location services{" "} <br/> <span >Click here after that</span>
+            <div>📍</div>Please enable location services <br />{" "}
+            <span>Click here after that</span>
           </StyledError>
         )}
         <PoweredBy>

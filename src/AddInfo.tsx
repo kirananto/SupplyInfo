@@ -126,7 +126,7 @@ const StyledInput = styled.input`
   font-size: 16px;
   color: #bdbbc4;
   border-radius: 5px;
-  border: ${(props: { hasError: any }) =>
+  border: ${(props: { hasError?: any }) =>
     props.hasError
       ? "solid 2px rgba(255, 42, 45, 0.93)"
       : "solid 1px rgba(107, 124, 147, 0.43)"};
@@ -156,6 +156,7 @@ class AddInfo extends Component<any, any> {
     address: "",
     location: "Unknown location",
     locationShort: "",
+    description: '',
     lat: 0,
     latFetched: false,
     direct:
@@ -211,7 +212,13 @@ class AddInfo extends Component<any, any> {
 
   handleChangePlaceName = (event: any) => {
     this.setState({
-      place_name: event.target.value
+      place_name: event.target.value.slice(0, 64)
+    });
+  };
+
+  handleChangeDescription = (event: any) => {
+    this.setState({
+      description: event.target.value.slice(0, 140)
     });
   };
 
@@ -257,11 +264,11 @@ class AddInfo extends Component<any, any> {
 
   handleAddress = (event: any) => {
     this.setState({
-      address: event.target.value
+      address: event.target.value.slice(0, 140)
     });
   };
   handleContact = (event: any) => {
-    const contact = event.target.value;
+    const contact = event.target.value.slice(0, 25);
     this.setState({
       contact
     });
@@ -292,6 +299,7 @@ class AddInfo extends Component<any, any> {
           address: this.state.address,
           contact: this.state.contact,
           direct: this.state.direct,
+          description: this.state.description,
           // The coordinates field must be a GeoPoint!
           coordinates: new firebase.firestore.GeoPoint(
             this.state.lat,
@@ -372,6 +380,14 @@ class AddInfo extends Component<any, any> {
               {this.state.addressError && (
                 <ErrorMessage> {this.state.addressError}</ErrorMessage>
               )}
+            </StyledInputContainer>
+            <StyledInputContainer>
+              <Label>📙 Additional info (Optional) </Label>
+              <StyledInput
+                onChange={this.handleChangeDescription}
+                value={this.state.description}
+                placeholder="If you want to add any extra information"
+              />
             </StyledInputContainer>
             <StyledInputContainer>
               <Label>📍 Pin Location </Label>
