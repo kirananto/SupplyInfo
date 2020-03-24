@@ -153,7 +153,7 @@ const Action = styled.a`
 
 const prevDate = new Date().getTime() - 1000 * 60 * 60 * 24 * 1;
 
-// const fiveDaysBack = new Date().getTime() - 1000 * 60 * 60 * 24 * 5;
+const fiveDaysBack = new Date().getTime() - 1000 * 60 * 60 * 24 * 5;
 
 export default class NearbySupplies extends Component {
   state = {
@@ -208,27 +208,27 @@ export default class NearbySupplies extends Component {
           });
         });
         this.setState({
-          isLoading: false
-          // supplies: supplies
-          //   .filter(item => {
-          //     if (this.state.clicked === "sanitizer") {
-          //       return item.supply_sanitizer;
-          //     } else if (this.state.clicked === "mask") {
-          //       return item.supply_masks;
-          //     } else if (this.state.clicked === "food") {
-          //       return item.supply_food;
-          //     } else {
-          //       return true;
-          //     }
-          //   })
-          //   .filter(
-          //     (item: any) =>
-          //       item.created.toMillis() >
-          //       firebase.firestore.Timestamp.fromDate(
-          //         new Date(fiveDaysBack)
-          //       ).toMillis()
-          //   )
-          //   .sort((a, b) => a.distance - b.distance)
+          isLoading: false,
+          supplies: supplies
+            .filter(item => {
+              if (this.state.clicked === "sanitizer") {
+                return item.supply_sanitizer;
+              } else if (this.state.clicked === "mask") {
+                return item.supply_masks;
+              } else if (this.state.clicked === "food") {
+                return item.supply_food;
+              } else {
+                return true;
+              }
+            })
+            .filter(
+              (item: any) =>
+                item.created.toMillis() >
+                firebase.firestore.Timestamp.fromDate(
+                  new Date(fiveDaysBack)
+                ).toMillis()
+            )
+            .sort((a, b) => a.distance - b.distance)
         });
       });
   };
