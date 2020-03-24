@@ -351,9 +351,9 @@ export default class NearbySupplies extends Component {
                 }
               >
                 <span role="img" aria-label="food">
-                  🍕{" "}
+                🥫{" "}
                 </span>
-                Food items
+                Food Provisions
               </Chips>
             </SubHeading>
             {this.state.isLoading || this.state.supplies?.length === 0 ? (
@@ -447,9 +447,9 @@ export default class NearbySupplies extends Component {
                         {item.supply_food && (
                           <TagItem>
                             <span role="img" aria-label="masks">
-                              🍕
+                            🥫
                             </span>{" "}
-                            Food items
+                            Food provisions
                           </TagItem>
                         )}
                         {item.facility_delivery && (

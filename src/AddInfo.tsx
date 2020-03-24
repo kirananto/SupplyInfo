@@ -459,9 +459,9 @@ class AddInfo extends Component<any, any> {
                   onClick={() => this.setState({ food: !this.state.food })}
                 >
                   <span role="img" aria-label="food">
-                    🍕{" "}
+                  🥫{" "}
                   </span>
-                  Food items
+                  Food provisions
                 </Chips>
               </SubHeading>
             </StyledInputContainer>
