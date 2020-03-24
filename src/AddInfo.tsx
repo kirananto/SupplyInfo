@@ -166,6 +166,7 @@ class AddInfo extends Component<any, any> {
       new URLSearchParams(window.location.search).get("direct") === "true",
     long: 0,
     contact: "",
+    mutex: false,
     masks: false,
     food: true,
     doorDelivery: false,
@@ -299,8 +300,8 @@ class AddInfo extends Component<any, any> {
     return placeName && address && contact;
   };
   onSubmit = () => {
-    // TODO Handle save
-    if (this.handleValidations()) {
+    if (this.handleValidations() && this.state.mutex === false) {
+      this.setState({ mutex: true })
       const db = firebaseApp.firestore();
 
       // Create a GeoFirestore reference
@@ -334,10 +335,12 @@ class AddInfo extends Component<any, any> {
           toast.success("Success Notification !", {
             position: toast.POSITION.TOP_CENTER
           });
+          this.setState({ mutex: false })
 
           this.props.history.push("/");
         })
         .catch(error => {
+          this.setState({ mutex: false })
           toast.error("Error Posting !", {
             position: toast.POSITION.TOP_CENTER
           });
