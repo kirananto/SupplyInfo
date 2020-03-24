@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import swearjar from "swearjar-extended";
 import { validatePhone } from "./helpers";
 import firebaseApp from "./Firebase";
+import { LoadingDiv } from "./NearbySupplies";
 import firebase from "firebase";
 import { GeoCollectionReference, GeoFirestore } from "geofirestore";
 
@@ -154,11 +155,13 @@ class AddInfo extends Component<any, any> {
   readonly state = {
     place_name: "",
     address: "",
-    location: "Unknown location",
+    location: undefined,
     locationShort: "",
     description: "",
     lat: 0,
     latFetched: false,
+    latError: false,
+    isLoading: true,
     direct:
       new URLSearchParams(window.location.search).get("direct") === "true",
     long: 0,
@@ -177,10 +180,12 @@ class AddInfo extends Component<any, any> {
     axios({
       url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.lat},${this.state.long}&addressdetails=1`
     }).then(result => {
-      const address = result.data?.[0]?.address;
       this.setState({
-        location: result.data?.[0]?.display_name,
-        locationShort: `${address?.road},${address?.village},${address?.county}`
+        location: `${result.data?.[0]?.display_name
+          ?.split(",")
+          .slice(-5)
+          .join(",")
+          .trim()}`
       });
     });
   };
@@ -190,22 +195,35 @@ class AddInfo extends Component<any, any> {
   }
 
   initialize = () => {
-    navigator?.geolocation?.getCurrentPosition(this.setDefaultCenter);
+    navigator?.geolocation?.getCurrentPosition(
+      this.setDefaultCenter,
+      this.handleError
+    );
   };
 
+  handleError = () => {
+    this.setState({
+      latFetched: false,
+      latError: true,
+      isLoading: false
+    });
+  };
   setDefaultCenter = (position: any) => {
     if (position?.coords?.latitude && position?.coords?.longitude) {
       this.setState(
         {
           lat: position.coords.latitude,
           long: position.coords.longitude,
-          latFetched: true
+          latFetched: true,
+          isLoading: false
         },
         this.fetchLocationString
       );
     } else {
       this.setState({
-        latFetched: false
+        latFetched: false,
+        latError: true,
+        isLoading: false
       });
     }
   };
@@ -344,15 +362,16 @@ class AddInfo extends Component<any, any> {
           </ChipSpan>
           Add Nearby Supply Info
         </Heading>
-        <PlaceHeading>
-          <span role="img" aria-label="location">
-            📍
-          </span>{" "}
-          You're at{" "}
-          {this.state.locationShort
-            ? this.state.locationShort
-            : this.state.location}
-        </PlaceHeading>
+        {!this.state.latError && (
+          <PlaceHeading>
+            <span role="img" aria-label="location">
+              📍
+            </span>{" "}
+            {this.state.location
+              ? `You're at ${this.state.location}`
+              : `Retrieving location...`}
+          </PlaceHeading>
+        )}
         {this.state.latFetched ? (
           <MainContainer>
             <StyledInputContainer>
@@ -459,7 +478,7 @@ class AddInfo extends Component<any, any> {
                   onClick={() => this.setState({ food: !this.state.food })}
                 >
                   <span role="img" aria-label="food">
-                  🥫{" "}
+                    🥫{" "}
                   </span>
                   Food provisions
                 </Chips>
@@ -487,7 +506,12 @@ class AddInfo extends Component<any, any> {
               </SubHeading>
             </StyledInputContainer>
             <StyledInputContainer>
-              <Label><span role="img" aria-label="contact">📞</span> Contact number </Label>
+              <Label>
+                <span role="img" aria-label="contact">
+                  📞
+                </span>{" "}
+                Contact number{" "}
+              </Label>
               <StyledInput
                 onChange={this.handleContact}
                 hasError={this.state.contactError}
@@ -501,6 +525,12 @@ class AddInfo extends Component<any, any> {
             </StyledInputContainer>
             <BlueButton onClick={this.onSubmit}>Save</BlueButton>
           </MainContainer>
+        ) : this.state.isLoading ? (
+          <LoadingDiv>
+            <div style={{ fontSize: "60px", marginBottom: "1rem" }}>🔄</div>
+            Be aware, not afraid ! <br />
+            Loading...
+          </LoadingDiv>
         ) : (
           <ErrorText>
             {" "}

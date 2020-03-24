@@ -100,7 +100,7 @@ const ItemsContainer = styled.div`
   margin-right: 15px;
 `;
 
-const LoadingDiv = styled.div`
+export const LoadingDiv = styled.div`
   color: #bdbbc4;
   font-size: 16px;
   margin-top: calc(50vh - 250px);
@@ -238,10 +238,13 @@ export default class NearbySupplies extends Component {
     axios({
       url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.userLat},${this.state.userLong}&addressdetails=1`
     }).then(result => {
-      const address = result.data?.[0]?.address;
       this.setState(
         {
-          locationString: `${address?.road},${address?.village},${address?.county}`
+          locationString: `${result.data?.[0]?.display_name
+            ?.split(',')
+            .slice(-5)
+            .join(',')
+            .trim()}`
         },
         this.loadSupplies
       );
@@ -305,10 +308,10 @@ export default class NearbySupplies extends Component {
               <span role="img" aria-label="location">
                 📍
               </span>{" "}
-              You're at{" "}
+              
               {this.state.locationString
-                ? this.state.locationString
-                : `Unknown location`}
+                ? `You're at ${this.state.locationString}`
+                : `Retrieving your location...`}
             </PlaceHeading>
             <div
               style={{
