@@ -156,7 +156,7 @@ class AddInfo extends Component<any, any> {
     address: "",
     location: "Unknown location",
     locationShort: "",
-    description: '',
+    description: "",
     lat: 0,
     latFetched: false,
     direct:
@@ -356,7 +356,12 @@ class AddInfo extends Component<any, any> {
         {this.state.latFetched ? (
           <MainContainer>
             <StyledInputContainer>
-              <Label>🏥 Enter place name </Label>
+              <Label>
+                <span role="img" aria-label="placename">
+                  🏥
+                </span>{" "}
+                Enter place name{" "}
+              </Label>
               <StyledInput
                 onChange={this.handleChangePlaceName}
                 value={this.state.place_name}
@@ -369,7 +374,12 @@ class AddInfo extends Component<any, any> {
               )}
             </StyledInputContainer>
             <StyledInputContainer>
-              <Label>📨 Address </Label>
+              <Label>
+                <span role="img" aria-label="address">
+                  📨
+                </span>{" "}
+                Address{" "}
+              </Label>
               <StyledInput
                 onChange={this.handleAddress}
                 value={this.state.address}
@@ -382,7 +392,12 @@ class AddInfo extends Component<any, any> {
               )}
             </StyledInputContainer>
             <StyledInputContainer>
-              <Label>📙 Additional info (Optional) </Label>
+              <Label>
+                <span role="img" aria-label="additional info">
+                  📙
+                </span>{" "}
+                Additional info (Optional){" "}
+              </Label>
               <StyledInput
                 onChange={this.handleChangeDescription}
                 value={this.state.description}
@@ -390,7 +405,12 @@ class AddInfo extends Component<any, any> {
               />
             </StyledInputContainer>
             <StyledInputContainer>
-              <Label>📍 Pin Location </Label>
+              <Label>
+                <span role="img" aria-label="location">
+                  📍
+                </span>{" "}
+                Pin Location{" "}
+              </Label>
               <StyledInput
                 disabled={true}
                 hasError={false}
@@ -399,13 +419,19 @@ class AddInfo extends Component<any, any> {
               />
               {!this.state.direct && (
                 <ItalicText>
-                  Ability to select location of shop - coming soon 🎉
+                  Ability to select location of shop - coming soon{" "}
+                  <span role="img" aria-label="tada">
+                    🎉
+                  </span>
                 </ItalicText>
               )}
             </StyledInputContainer>
             <StyledInputContainer>
               <Label style={{ marginBottom: "0.5rem" }}>
-                🛍️ Select supplies that are available here
+                <span role="img" aria-label="supplies">
+                  🛍️
+                </span>{" "}
+                Select supplies that are available here
               </Label>
               <SubHeading>
                 <Chips
@@ -441,7 +467,10 @@ class AddInfo extends Component<any, any> {
             </StyledInputContainer>
             <StyledInputContainer>
               <Label style={{ marginBottom: "0.5rem" }}>
-                🏛 Facilities that are available
+                <span role="img" aria-label="facilities">
+                  🏛
+                </span>{" "}
+                Facilities that are available
               </Label>
               <SubHeading>
                 <Chips
@@ -458,7 +487,7 @@ class AddInfo extends Component<any, any> {
               </SubHeading>
             </StyledInputContainer>
             <StyledInputContainer>
-              <Label>📞 Contact number </Label>
+              <Label><span role="img" aria-label="contact">📞</span> Contact number </Label>
               <StyledInput
                 onChange={this.handleContact}
                 hasError={this.state.contactError}
@@ -475,7 +504,11 @@ class AddInfo extends Component<any, any> {
         ) : (
           <ErrorText>
             {" "}
-            <div style={{ fontSize: "60px" }}>❌</div>
+            <div style={{ fontSize: "60px" }}>
+              <span role="img" aria-label="error">
+                ❌
+              </span>
+            </div>
             <br /> Unable to read your location
             <br />
             <div onClick={this.initialize}>
