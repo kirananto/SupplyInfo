@@ -550,8 +550,7 @@ class AddInfo extends Component<any, any> {
           </ErrorText>
         )}
         <PoweredBy>
-          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>, in
-          association with #BreaktheChain
+          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <NavLink to="https://github.com/kirananto/SupplyInfo">Github</NavLink> | #BreaktheChain
         </PoweredBy>
       </div>
     );

@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
+import Contributors from "./Contributors";
 import Homepage from "./Homepage";
 import NearbySupplies from "./NearbySupplies";
 import AddInfo from "./AddInfo";
@@ -11,8 +12,11 @@ function App() {
     <div className="App">
       <Router>
         <Switch>
-          <Route path="/add-data">
+        <Route path="/add-data">
             <AddInfo />
+          </Route> 
+          <Route path="/contributors">
+            <Contributors />
           </Route>
           <Route path="/nearby-places">
             <NearbySupplies />

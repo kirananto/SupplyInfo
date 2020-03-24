@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Logo from './logo.png'
 const ButtonContainer = styled.div`
@@ -125,7 +125,7 @@ export default class Homepage extends Component {
           </Button>
         </ButtonContainer>
         <PoweredBy>
-          Powered by <a href="https://github.com/kirananto">Kiran Anto</a>, in association with #BreaktheChain
+          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <NavLink to="https://github.com/kirananto/SupplyInfo">Github</NavLink> | #BreaktheChain
         </PoweredBy>
       </div>
     );
