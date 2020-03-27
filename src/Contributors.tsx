@@ -34,7 +34,7 @@ const ContributorsDiv = styled.div`
   padding-bottom: 5rem;
 `;
 
-const ContributorTile = styled(NavLink)`
+const ContributorTile = styled.a`
   display: grid;
   text-decoration: none;
   color: #bdbbc4;
@@ -70,6 +70,11 @@ export default class Contributors extends Component {
       email: 'kirananto@gmail.com',
       role: 'Creator',
       link: 'https://github.com/kirananto'
+    }, {
+      name: 'Mohamed Fawaz',
+      email: 'favazkandath@gmail.com',
+      role: 'Contributor',
+      link: 'https://github.com/favazkandath'
     }
   ]
   render() {
@@ -92,7 +97,7 @@ export default class Contributors extends Component {
         </Heading>
         <ContributorsDiv>
           {this.contributors.map(item => (
-            <ContributorTile to={item.link} key={item.name}>
+            <ContributorTile href={item.link} key={item.name}>
             <ContributorIcon>{item.name[0]}</ContributorIcon>
             <ContributorContent>
             <ContributorTitle>{item.name}</ContributorTitle>

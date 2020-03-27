@@ -11,6 +11,8 @@ import firebaseApp from "./Firebase";
 import { LoadingDiv } from "./NearbySupplies";
 import firebase from "firebase";
 import { GeoCollectionReference, GeoFirestore } from "geofirestore";
+import Leaflet from 'leaflet'
+import CrossIcon from '@atlaskit/icon/glyph/cross';
 
 const Heading = styled.div`
   font-size: 16px;
@@ -151,6 +153,31 @@ const ErrorMessage = styled.div`
   margin-left: 15px;
 `;
 
+const ModalBack = styled.div`
+    padding: 6rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100vw - 12rem);
+    background: rgb(0,0,0,0.7);
+    height: calc(100vh - 12rem);
+`
+
+const MapHolder = styled.div`
+    height: 100%;
+    position: relative;
+    left: 0;
+    top: 0;
+    border-radius: 7px;
+`
+
+const Close = styled.div`
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  cursor: pointer;
+`
+
 class AddInfo extends Component<any, any> {
   readonly state = {
     place_name: "",
@@ -174,7 +201,8 @@ class AddInfo extends Component<any, any> {
 
     placeNameError: undefined,
     addressError: undefined,
-    contactError: undefined
+    contactError: undefined,
+    showModal: false
   };
 
   fetchLocationString = () => {
@@ -182,11 +210,7 @@ class AddInfo extends Component<any, any> {
       url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.lat},${this.state.long}&addressdetails=1`
     }).then(result => {
       this.setState({
-        location: `${result.data?.[0]?.display_name
-          ?.split(",")
-          .slice(-5)
-          .join(",")
-          .trim()}`
+        location: `${result.data?.[0]?.display_name}`
       });
     });
   };
@@ -201,6 +225,55 @@ class AddInfo extends Component<any, any> {
       this.handleError
     );
   };
+
+  onMapClick = (e: any, marker: Leaflet.Marker) => {
+    this.setState({
+      lat: e.latlng.lat,
+      long: e.latlng.lng
+    }, () => {
+      marker.setLatLng(e.latlng)
+      axios({
+        url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.lat},${this.state.long}&addressdetails=1`
+      }).then(result => {
+        this.setState({
+          location: `${result.data?.[0]?.display_name}`
+        }, () => marker.bindPopup(this.state.location!).openPopup())
+      })
+    })
+  }
+
+  handleMarkerDragEnd = (e: any, marker: Leaflet.Marker) => {
+    this.setState({
+      lat: marker.getLatLng().lat,
+      long: marker.getLatLng().lng
+    }, () => {
+      axios({
+        url: `https://nominatim.openstreetmap.org/search?format=json&q=${this.state.lat},${this.state.long}&addressdetails=1`
+      }).then(result => {
+        this.setState({
+          location: `${result.data?.[0]?.display_name}`
+        }, () => marker.bindPopup(this.state.location!).openPopup())
+      })
+    })
+  }
+
+  handleMap = () => {
+    const map = Leaflet.map('map').setView([this.state.lat, this.state.long], 10);
+    Leaflet.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: 'pk.eyJ1IjoiZmF2YXprYW5kYXRoIiwiYSI6ImNrODkxZjBmODAyZDYzZnBocDc3cXc4N3YifQ.l8ROHzmhWicXuyID6F0RHw'
+    }).addTo(map);
+    const marker = Leaflet.marker([this.state.lat, this.state.long], {
+      draggable: true
+    }).addTo(map)
+    marker.bindPopup(this.state.location!).openPopup()
+    marker.on('dragend', (e: any) => this.handleMarkerDragEnd(e, marker))
+    map.on('click', (e: any) => this.onMapClick(e, marker))
+  }
 
   handleError = () => {
     this.setState({
@@ -350,6 +423,18 @@ class AddInfo extends Component<any, any> {
   render() {
     return (
       <div style={{ textAlign: "left" }}>
+        {this.state.showModal && 
+        <ModalBack>
+          <Close
+            onClick={() => this.setState({
+              showModal: false
+            })}
+          >
+            <CrossIcon label={"close"} size={"xlarge"} primaryColor={"#ffffff"}/>
+          </Close>
+          <MapHolder id='map'/>
+        </ModalBack>
+        }
         <Heading>
           <ChipSpan
             to="/"
@@ -434,7 +519,7 @@ class AddInfo extends Component<any, any> {
                 Pin Location{" "}
               </Label>
               <StyledInput
-                disabled={true}
+                onClick={() => this.setState({ showModal: true }, this.handleMap)}
                 hasError={false}
                 value={this.state.location}
                 placeholder={"Autofilled from your gps location"}
@@ -535,20 +620,20 @@ class AddInfo extends Component<any, any> {
             Loading...
           </LoadingDiv>
         ) : (
-          <ErrorText>
-            {" "}
-            <div style={{ fontSize: "60px" }}>
-              <span role="img" aria-label="error">
-                ❌
+              <ErrorText>
+                {" "}
+                <div style={{ fontSize: "60px" }}>
+                  <span role="img" aria-label="error">
+                    ❌
               </span>
+                </div>
+                <br /> Unable to read your location
+                <br />
+                <div onClick={this.initialize}>
+                  Enable your location services and try again
             </div>
-            <br /> Unable to read your location
-            <br />
-            <div onClick={this.initialize}>
-              Enable your location services and try again
-            </div>
-          </ErrorText>
-        )}
+              </ErrorText>
+            )}
         <PoweredBy>
           Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <a href="https://github.com/kirananto/SupplyInfo">Github</a> | #BreaktheChain
         </PoweredBy>
