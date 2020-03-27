@@ -175,7 +175,7 @@ export default class NearbySupplies extends Component {
   initialize = () => {
     navigator?.geolocation.getCurrentPosition(
       this.locationSuccessCallback,
-      this.locationErrorCallback
+      this.locationErrorCallback, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
     );
   };
 

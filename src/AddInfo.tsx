@@ -229,7 +229,7 @@ class AddInfo extends Component<any, any> {
   initialize = () => {
     navigator?.geolocation?.getCurrentPosition(
       this.setDefaultCenter,
-      this.handleError
+      this.handleError, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
     );
   };
 
