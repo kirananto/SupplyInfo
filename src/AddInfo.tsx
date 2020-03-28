@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { PoweredBy } from "./Homepage";
+import { PoweredBy, TotalHelped } from "./Homepage";
 import { withRouter } from "react-router";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -224,7 +224,7 @@ class AddInfo extends Component<any, any> {
 
   componentDidMount() {
     this.initialize();
-    firebaseApp.analytics().logEvent('tried_to_add')
+    firebaseApp.analytics().logEvent("tried_to_add");
   }
 
   initialize = () => {
@@ -437,7 +437,7 @@ class AddInfo extends Component<any, any> {
             position: toast.POSITION.TOP_CENTER
           });
           this.setState({ mutex: false });
-          firebaseApp.analytics().logEvent('added_info')
+          firebaseApp.analytics().logEvent("added_info");
           this.props.history.push("/");
         })
         .catch(error => {
@@ -675,6 +675,13 @@ class AddInfo extends Component<any, any> {
             </div>
           </ErrorText>
         )}
+        <a href="https://www.webfreecounter.com/" target="_blank">
+          <TotalHelped>Total People Helped</TotalHelped>{" "}
+          <img
+            src="https://www.webfreecounter.com/hit.php?id=guvekofnd&nd=6&style=26"
+            alt="web counter"
+          />
+        </a>
         <PoweredBy>
           Made in India with ❤️ |{" "}
           <NavLink to="/contributors">Contributors</NavLink> |{" "}

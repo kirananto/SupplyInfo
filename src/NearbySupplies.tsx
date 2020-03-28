@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { PoweredBy } from "./Homepage";
+import { TotalHelped, PoweredBy } from "./Homepage";
 import axios from "axios";
 import fb from "./Firebase";
 import firebase from "firebase";
@@ -509,6 +509,13 @@ export default class NearbySupplies extends Component {
             <span>Click here after that</span>
           </StyledError>
         )}
+        <a href="https://www.webfreecounter.com/" target="_blank">
+          <TotalHelped>Total People Helped</TotalHelped>{" "}
+          <img
+            src="https://www.webfreecounter.com/hit.php?id=guvekofnd&nd=6&style=26"
+            alt="web counter"
+          />
+        </a>
         <PoweredBy>
           Made in India with ❤️ |{" "}
           <NavLink to="/contributors">Contributors</NavLink> |{" "}

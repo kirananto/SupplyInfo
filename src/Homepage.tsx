@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import Logo from './logo.png'
+import Logo from "./logo.png";
 const ButtonContainer = styled.div`
   align-self: center;
   justify-self: center;
@@ -61,6 +61,11 @@ export const PoweredBy = styled.div`
     color: #d32f2f;
   }
 `;
+
+export const TotalHelped = styled.div`
+  margin-bottom: 1rem;
+  color: #bdbbc4;
+`;
 const SubHeading = styled.div`
   font-size: 16px;
   margin-top: 0.5rem;
@@ -90,15 +95,15 @@ const IText = styled.div`
 `;
 
 const ImageContainer = styled.img`
-    max-width: 50%;
-`
+  max-width: 50%;
+`;
 
 export default class Homepage extends Component {
   render() {
     return (
       <div style={{ display: "grid", minHeight: "100vh" }}>
         <ButtonContainer>
-            <ImageContainer src={Logo}/>
+          <ImageContainer src={Logo} />
           <Heading>
             Neigbhourhood Supply
             <SubHeading>
@@ -124,8 +129,19 @@ export default class Homepage extends Component {
             </ItalicsText>
           </Button>
         </ButtonContainer>
+        <a href="https://www.webfreecounter.com/" target="_blank">
+          <TotalHelped>Total People Helped</TotalHelped>{" "}
+          <img
+            src="https://www.webfreecounter.com/hit.php?id=guvekofnd&nd=6&style=26"
+            alt="web counter"
+          />
+        </a>
+
         <PoweredBy>
-          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <a href="https://github.com/kirananto/SupplyInfo">Github</a> | #BreaktheChain
+          Made in India with ❤️ |{" "}
+          <NavLink to="/contributors">Contributors</NavLink> |{" "}
+          <a href="https://github.com/kirananto/SupplyInfo">Github</a> |
+          #BreaktheChain
         </PoweredBy>
       </div>
     );
