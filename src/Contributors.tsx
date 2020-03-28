@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import Firebase from "./Firebase";
 
 const Heading = styled.div`
   font-size: 24px;
@@ -78,6 +79,7 @@ export default class Contributors extends Component {
     }
   ]
   render() {
+    Firebase.analytics().logEvent('viewed_contributors')
     return (
       <div>
         <Heading>

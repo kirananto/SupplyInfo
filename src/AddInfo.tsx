@@ -224,6 +224,7 @@ class AddInfo extends Component<any, any> {
 
   componentDidMount() {
     this.initialize();
+    firebaseApp.analytics().logEvent('tried_to_add')
   }
 
   initialize = () => {
@@ -436,7 +437,7 @@ class AddInfo extends Component<any, any> {
             position: toast.POSITION.TOP_CENTER
           });
           this.setState({ mutex: false });
-
+          firebaseApp.analytics().logEvent('added_info')
           this.props.history.push("/");
         })
         .catch(error => {

@@ -175,6 +175,7 @@ export default class NearbySupplies extends Component {
   };
 
   componentDidMount() {
+    fb.analytics().logEvent('viewed_supplies')
     this.initialize();
   }
 
