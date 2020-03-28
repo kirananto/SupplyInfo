@@ -574,7 +574,7 @@ class NeedDelivery extends Component<any, any> {
                 </ItalicText>
               )}
             </StyledInputContainer>
-
+cd 
             <StyledInputContainer>
               <Label>
                 <span role="img" aria-label="contact">
@@ -587,7 +587,7 @@ class NeedDelivery extends Component<any, any> {
                 hasError={this.state.contactError}
                 onBlur={this.validateContact}
                 value={this.state.contact}
-                placeholder="Contact no of person with supply"
+                placeholder="Contact no: for delivery"
               />
               {this.state.contactError && (
                 <ErrorMessage> {this.state.contactError}</ErrorMessage>
