@@ -179,6 +179,9 @@ export default class NearbySupplies extends Component {
     this.initialize();
   }
 
+  validateData = (supply: any) => {
+      // if(supply.)
+  }
   initialize = () => {
     navigator?.geolocation.getCurrentPosition(
       this.locationSuccessCallback,
@@ -232,7 +235,7 @@ export default class NearbySupplies extends Component {
             })
             .filter(
               (item: any) =>
-                item.created.toMillis() >
+                item.created?.toMillis() >
                 firebase.firestore.Timestamp.fromDate(
                   new Date(fiveDaysBack)
                 ).toMillis()
@@ -408,14 +411,14 @@ export default class NearbySupplies extends Component {
               </LoadingDiv>
             ) : (
               <ItemsContainer>
-                {this.state.supplies.map((item: any, index) => {
+                {this.state.supplies?.map((item: any, index) => {
                   return (
                     <Item key={index}>
                       <Distance>
                         <span role="img" aria-label="location">
                           📍
                         </span>
-                        {item.distance.toFixed(2)} KM
+                        {item.distance?.toFixed(2)} KM
                       </Distance>
                       <ItemTitle>{item.place_name}</ItemTitle>
                       <ItemDescription>{item.address}</ItemDescription>
@@ -434,7 +437,7 @@ export default class NearbySupplies extends Component {
                       )}
                       <Tags>Tags</Tags>
                       <TagsContainer>
-                        {item.created && item.created.toMillis() > prevDate && (
+                        {item.created && item.created?.toMillis() > prevDate && (
                           <TagItem>
                             <span role="img" aria-label="recently-added">
                               ✨
@@ -483,7 +486,7 @@ export default class NearbySupplies extends Component {
                           Call
                         </Action>
                         <Action
-                          href={`google.navigation:q=${item.coordinates.latitude},${item.coordinates.longitude}`}
+                          href={`google.navigation:q=${item.coordinates?.latitude},${item.coordinates?.longitude}`}
                         >
                           <span role="img" aria-label="navigate">
                             🚗
