@@ -136,6 +136,12 @@ const Distance = styled.div`
   float: right;
 `;
 
+export const NoSupport = styled(Heading)`
+  @media (max-width: 640px) {
+    display: none;
+  }
+`;
+
 const Actions = styled.div`
   margin-left: -15px;
   margin-right: -15px;
@@ -175,7 +181,8 @@ export default class NearbySupplies extends Component {
   initialize = () => {
     navigator?.geolocation.getCurrentPosition(
       this.locationSuccessCallback,
-      this.locationErrorCallback, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+      this.locationErrorCallback,
+      { timeout: 30000, enableHighAccuracy: true, maximumAge: 75000 }
     );
   };
 
@@ -241,9 +248,9 @@ export default class NearbySupplies extends Component {
       this.setState(
         {
           locationString: `${result.data?.[0]?.display_name
-            ?.split(',')
+            ?.split(",")
             .slice(-5)
-            .join(',')
+            .join(",")
             .trim()}`
         },
         this.loadSupplies
@@ -272,7 +279,8 @@ export default class NearbySupplies extends Component {
     if ((navigator as any).share) {
       (navigator as any).share({
         title: "Your Friendly Neighbourhood Supplies",
-        text: "Get Help and Help people get food provisions and supplies during the time of lockdown.",
+        text:
+          "Get Help and Help people get food provisions and supplies during the time of lockdown.",
         url: "https://supply.netlify.com"
       });
     }
@@ -302,13 +310,15 @@ export default class NearbySupplies extends Component {
           </ChipSpan>
           Nearby Supplies
         </Heading>
+        <NoSupport>
+          ⚠️ Please use from your phones for better accuracy
+        </NoSupport>
         {this.state.latFetched ? (
           <>
             <PlaceHeading>
               <span role="img" aria-label="location">
                 📍
               </span>{" "}
-              
               {this.state.locationString
                 ? `You're at ${this.state.locationString}`
                 : `Retrieving your location...`}
@@ -354,7 +364,7 @@ export default class NearbySupplies extends Component {
                 }
               >
                 <span role="img" aria-label="food">
-                🥫{" "}
+                  🥫{" "}
                 </span>
                 Food Provisions
               </Chips>
@@ -450,7 +460,7 @@ export default class NearbySupplies extends Component {
                         {item.supply_food && (
                           <TagItem>
                             <span role="img" aria-label="masks">
-                            🥫
+                              🥫
                             </span>{" "}
                             Food provisions
                           </TagItem>
@@ -489,12 +499,20 @@ export default class NearbySupplies extends Component {
         ) : (
           <StyledError onClick={this.initialize}>
             {" "}
-            <div><span role="img" aria-label="location">📍</span></div>Please enable location services <br />{" "}
+            <div>
+              <span role="img" aria-label="location">
+                📍
+              </span>
+            </div>
+            Please enable location services <br />{" "}
             <span>Click here after that</span>
           </StyledError>
         )}
         <PoweredBy>
-          Made in India with ❤️ | <NavLink to="/contributors">Contributors</NavLink> | <a href="https://github.com/kirananto/SupplyInfo">Github</a> | #BreaktheChain
+          Made in India with ❤️ |{" "}
+          <NavLink to="/contributors">Contributors</NavLink> |{" "}
+          <a href="https://github.com/kirananto/SupplyInfo">Github</a> |
+          #BreaktheChain
         </PoweredBy>
       </div>
     );

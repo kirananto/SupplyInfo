@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import swearjar from "swearjar-extended";
 import { validatePhone } from "./helpers";
 import firebaseApp from "./Firebase";
-import { LoadingDiv } from "./NearbySupplies";
+import { LoadingDiv, NoSupport } from "./NearbySupplies";
 import firebase from "firebase";
 import { GeoCollectionReference, GeoFirestore } from "geofirestore";
 import Leaflet from "leaflet";
@@ -229,7 +229,8 @@ class AddInfo extends Component<any, any> {
   initialize = () => {
     navigator?.geolocation?.getCurrentPosition(
       this.setDefaultCenter,
-      this.handleError, {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+      this.handleError,
+      { timeout: 30000, enableHighAccuracy: true, maximumAge: 75000 }
     );
   };
 
@@ -483,6 +484,10 @@ class AddInfo extends Component<any, any> {
           </ChipSpan>
           Add Nearby Supply Info
         </Heading>
+
+        <NoSupport>
+          ⚠️ Please use from your phones for better accuracy
+        </NoSupport>
         {!this.state.latError && (
           <PlaceHeading>
             <span role="img" aria-label="location">
