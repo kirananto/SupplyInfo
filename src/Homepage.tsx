@@ -105,7 +105,7 @@ export default class Homepage extends Component {
         <ButtonContainer>
           <ImageContainer src={Logo} />
           <Heading>
-            Neigbhourhood Supply
+          Neighbourhood Supply
             <SubHeading>
               An inititative to ease life during <br />
               COVID-19 Lockdowns
