@@ -160,7 +160,7 @@ const Action = styled.a`
 
 const prevDate = new Date().getTime() - 1000 * 60 * 60 * 24 * 1;
 
-const fiveDaysBack = new Date().getTime() - 1000 * 60 * 60 * 24 * 5;
+const fiveDaysBack = new Date().getTime() - 1000 * 60 * 60 * 24 * 21;
 
 export default class NearbySupplies extends Component {
   state = {
